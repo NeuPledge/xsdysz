@@ -4,6 +4,8 @@ import cn.iocoder.yudao.framework.common.exception.enums.ServiceErrorCodeRange;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import static cn.iocoder.yudao.framework.common.exception.enums.GlobalErrorCodeConstants.ERROR;
+
 /**
  * 业务逻辑异常 Exception
  */
@@ -31,6 +33,11 @@ public final class ServiceException extends RuntimeException {
     public ServiceException(ErrorCode errorCode) {
         this.code = errorCode.getCode();
         this.message = errorCode.getMsg();
+    }
+
+    public ServiceException(String message) {
+        this.code = ERROR.getCode();
+        this.message = message;
     }
 
     public ServiceException(Integer code, String message) {

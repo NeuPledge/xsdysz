@@ -15,6 +15,7 @@ import cn.iocoder.yudao.framework.common.exception.ErrorCode;
 public interface GlobalErrorCodeConstants {
 
     ErrorCode SUCCESS = new ErrorCode(0, "成功");
+    ErrorCode ERROR = new ErrorCode(888, "错误");
 
     // ========== 客户端错误段 ==========
 

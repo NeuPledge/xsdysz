@@ -162,7 +162,7 @@ yudao:
   codegen:
     base-package: ${yudao.info.base-package}
     db-schemas: ${spring.datasource.dynamic.datasource.master.name}
-    front-type: 10 # 前端模版的类型，参见 CodegenFrontTypeEnum 枚举类
+    front-type: 20 # 前端模版的类型，参见 CodegenFrontTypeEnum 枚举类
   error-code: # 错误码相关配置项
     constants-class-list:
       - cn.iocoder.yudao.module.bpm.enums.ErrorCodeConstants
@@ -253,3 +253,14 @@ debug: false
 minidao :
   base-package: org.jeecg.modules.jmreport.desreport.dao*
   db-type: mysql
+
+
+debrief:
+  name: debrief-server
+  download-enable: true
+  download-path-windows: D:\sunchenchen\desktop\mytest
+  download-path-linux: ~/debrief-data
+  download-comment-path-windows: ${debrief.download-path-windows}\comment
+  download-comment-path-linux: ${debrief.download-path-linux}/comment
+  download-path:
+  download-comment-path:

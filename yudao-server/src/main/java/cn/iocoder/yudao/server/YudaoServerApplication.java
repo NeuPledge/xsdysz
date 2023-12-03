@@ -1,5 +1,7 @@
 package cn.iocoder.yudao.server;
 
+import cn.hutool.extra.spring.SpringUtil;
+import cn.iocoder.yudao.module.debrief.config.ApplicationConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -22,6 +24,11 @@ public class YudaoServerApplication {
         // 如果你碰到启动的问题，请认真阅读 https://doc.iocoder.cn/quick-start/ 文章
 
         SpringApplication.run(YudaoServerApplication.class, args);
+
+        SpringUtil.getBean(ApplicationConfig.class).check();
+
+
+
 //        new SpringApplicationBuilder(YudaoServerApplication.class)
 //                .applicationStartup(new BufferingApplicationStartup(20480))
 //                .run(args);
