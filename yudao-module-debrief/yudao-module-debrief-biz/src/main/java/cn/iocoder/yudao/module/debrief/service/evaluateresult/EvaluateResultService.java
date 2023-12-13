@@ -1,11 +1,18 @@
 package cn.iocoder.yudao.module.debrief.service.evaluateresult;
 
-import java.util.*;
-import javax.validation.*;
-import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.vo.*;
-import cn.iocoder.yudao.module.debrief.dal.dataobject.evaluateresult.EvaluateResultDO;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
-import cn.iocoder.yudao.framework.common.pojo.PageParam;
+import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.BranchProgressDto;
+import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.CollegeProgressDto;
+import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.vo.BranchProgressRespVo;
+import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.vo.CommentTrendRespVO;
+import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.vo.EvaluateResultPageReqVO;
+import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.vo.EvaluateResultSaveReqVO;
+import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.vo.GradeProgressRespVo;
+import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.vo.ProgressTrendRespVO;
+import cn.iocoder.yudao.module.debrief.dal.dataobject.evaluateresult.EvaluateResultDO;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 评价结果 Service 接口
@@ -51,5 +58,15 @@ public interface EvaluateResultService {
      * @return 评价结果分页
      */
     PageResult<EvaluateResultDO> getEvaluateResultPage(EvaluateResultPageReqVO pageReqVO);
+
+    ProgressTrendRespVO finishProgressTrend();
+
+    CommentTrendRespVO commentTrend();
+
+    List<CollegeProgressDto> collegeProgress();
+
+    BranchProgressRespVo branchProgress();
+
+    GradeProgressRespVo gradeProgress();
 
 }

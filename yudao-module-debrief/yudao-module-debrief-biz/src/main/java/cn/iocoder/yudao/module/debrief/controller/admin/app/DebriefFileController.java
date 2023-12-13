@@ -1,4 +1,4 @@
-package cn.iocoder.yudao.module.debrief.controller.app.app;
+package cn.iocoder.yudao.module.debrief.controller.admin.app;
 
 import cn.iocoder.yudao.module.debrief.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;

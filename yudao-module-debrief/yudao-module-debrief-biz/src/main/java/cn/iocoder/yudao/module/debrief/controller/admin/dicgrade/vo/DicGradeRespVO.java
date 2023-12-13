@@ -21,6 +21,10 @@ public class DicGradeRespVO {
     @ExcelProperty("学院id")
     private Long collegeId;
 
+    @Schema(description = "学院名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "23185")
+    @ExcelProperty("学院名称")
+    private String collegeName;
+
     @Schema(description = "班级名", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋艿")
     @ExcelProperty("班级名")
     private String gradeName;

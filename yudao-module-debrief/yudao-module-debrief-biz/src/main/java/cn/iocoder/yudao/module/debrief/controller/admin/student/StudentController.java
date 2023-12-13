@@ -50,8 +50,8 @@ public class StudentController {
     @PostMapping("/import")
     @Operation(summary = "导入初始数据")
     @PreAuthorize("@ss.hasPermission('debrief:student:create')")
-    public CommonResult<StudentImportRespVo> importData(@RequestParam("file") MultipartFile file) {
-        StudentImportRespVo studentImportRespVo = studentService.importData(file);
+    public CommonResult<StudentImportRespVo> importData(FileUploadReqVO uploadReqVO) {
+        StudentImportRespVo studentImportRespVo = studentService.importData(uploadReqVO.getFile());
         return success(studentImportRespVo);
     }
 

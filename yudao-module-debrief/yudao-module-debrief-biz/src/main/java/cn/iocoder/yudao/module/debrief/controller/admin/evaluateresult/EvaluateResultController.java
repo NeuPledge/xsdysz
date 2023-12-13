@@ -1,14 +1,17 @@
 package cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult;
 
+import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.CollegeProgressDto;
+import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.ProgressTrendDto;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.security.access.prepost.PreAuthorize;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Operation;
 
-import javax.validation.constraints.*;
 import javax.validation.*;
 import javax.servlet.http.*;
 import java.util.*;
@@ -18,11 +21,13 @@ import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
+
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
 import cn.iocoder.yudao.framework.excel.core.util.ExcelUtils;
 
 import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
+
 import static cn.iocoder.yudao.framework.operatelog.core.enums.OperateTypeEnum.*;
 
 import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.vo.*;
@@ -71,6 +76,41 @@ public class EvaluateResultController {
         return success(BeanUtils.toBean(evaluateResult, EvaluateResultRespVO.class));
     }
 
+    @GetMapping("/finish-progress-trend")
+    @Operation(summary = "近30日测评完成党员进度趋势")
+    public CommonResult<ProgressTrendRespVO> finishProgressTrend() {
+        ProgressTrendRespVO vo = evaluateResultService.finishProgressTrend();
+        return success(vo);
+    }
+
+    @GetMapping("/comment-trend")
+    @Operation(summary = "近30日测评票数趋势")
+    public CommonResult<CommentTrendRespVO> commentTrend() {
+        CommentTrendRespVO vo = evaluateResultService.commentTrend();
+        return success(vo);
+    }
+
+    @GetMapping("/college-progress")
+    @Operation(summary = "学院进度")
+    public CommonResult<List<CollegeProgressDto>> collegeProgress() {
+        List<CollegeProgressDto> collegeProgressDtos = evaluateResultService.collegeProgress();
+        return success(collegeProgressDtos);
+    }
+
+    @GetMapping("/branch-progress")
+    @Operation(summary = "支部进度")
+    public CommonResult<BranchProgressRespVo> branchProgress() {
+        BranchProgressRespVo branchProgressRespVo = evaluateResultService.branchProgress();
+        return success(branchProgressRespVo);
+    }
+
+    @GetMapping("/grade-progress")
+    @Operation(summary = "班级进度")
+    public CommonResult<GradeProgressRespVo> gradeProgress() {
+        GradeProgressRespVo gradeProgress = evaluateResultService.gradeProgress();
+        return success(gradeProgress);
+    }
+
     @GetMapping("/page")
     @Operation(summary = "获得评价结果分页")
     @PreAuthorize("@ss.hasPermission('debrief:evaluate-result:query')")
@@ -84,12 +124,12 @@ public class EvaluateResultController {
     @PreAuthorize("@ss.hasPermission('debrief:evaluate-result:export')")
     @OperateLog(type = EXPORT)
     public void exportEvaluateResultExcel(@Valid EvaluateResultPageReqVO pageReqVO,
-              HttpServletResponse response) throws IOException {
+                                          HttpServletResponse response) throws IOException {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
         List<EvaluateResultDO> list = evaluateResultService.getEvaluateResultPage(pageReqVO).getList();
         // 导出 Excel
         ExcelUtils.write(response, "评价结果.xls", "数据", EvaluateResultRespVO.class,
-                        BeanUtils.toBean(list, EvaluateResultRespVO.class));
+                BeanUtils.toBean(list, EvaluateResultRespVO.class));
     }
 
 }

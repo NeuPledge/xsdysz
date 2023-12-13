@@ -1,11 +1,15 @@
 package cn.iocoder.yudao.module.debrief.service.dicgrade;
 
+import cn.iocoder.yudao.module.debrief.controller.app.response.DicCollegeResponse;
+import cn.iocoder.yudao.module.debrief.service.DicService;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
 import cn.iocoder.yudao.module.debrief.controller.admin.dicgrade.vo.*;
 import cn.iocoder.yudao.module.debrief.dal.dataobject.dicgrade.DicGradeDO;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
@@ -28,6 +32,9 @@ public class DicGradeServiceImpl implements DicGradeService {
 
     @Resource
     private DicGradeMapper dicGradeMapper;
+
+    @Resource
+    private DicService dicService;
 
     @Override
     public Long createDicGrade(DicGradeSaveReqVO createReqVO) {
@@ -68,7 +75,8 @@ public class DicGradeServiceImpl implements DicGradeService {
 
     @Override
     public PageResult<DicGradeDO> getDicGradePage(DicGradePageReqVO pageReqVO) {
-        return dicGradeMapper.selectPage(pageReqVO);
+        PageResult<DicGradeDO> dicGradeDOPageResult = dicGradeMapper.selectPage(pageReqVO);
+        return dicGradeDOPageResult;
     }
 
 }

@@ -1,5 +1,7 @@
 package cn.iocoder.yudao.module.debrief.controller.admin.dicgrade;
 
+import cn.iocoder.yudao.module.debrief.controller.app.response.DicCollegeResponse;
+import cn.iocoder.yudao.module.debrief.service.DicService;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -13,6 +15,7 @@ import javax.validation.*;
 import javax.servlet.http.*;
 import java.util.*;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
@@ -37,6 +40,9 @@ public class DicGradeController {
 
     @Resource
     private DicGradeService dicGradeService;
+
+    @Resource
+    private DicService dicService;
 
     @PostMapping("/create")
     @Operation(summary = "创建班级字典列")
@@ -76,7 +82,16 @@ public class DicGradeController {
     @PreAuthorize("@ss.hasPermission('debrief:dic-grade:query')")
     public CommonResult<PageResult<DicGradeRespVO>> getDicGradePage(@Valid DicGradePageReqVO pageReqVO) {
         PageResult<DicGradeDO> pageResult = dicGradeService.getDicGradePage(pageReqVO);
-        return success(BeanUtils.toBean(pageResult, DicGradeRespVO.class));
+        PageResult<DicGradeRespVO> dicGradeRespVOPageResult = BeanUtils.toBean(pageResult, DicGradeRespVO.class);
+        List<DicCollegeResponse> colleges = dicService.getColleges();
+        Map<Long, String> collegeMap = colleges.stream().collect(Collectors.toMap(e -> e.getId(), e -> e.getCollegeName()));
+        for (DicGradeRespVO dicGradeRespVO : dicGradeRespVOPageResult.getList()) {
+            Long collegeId = dicGradeRespVO.getCollegeId();
+            String name = collegeMap.get(collegeId);
+            dicGradeRespVO.setCollegeName(name);
+        }
+
+        return success(dicGradeRespVOPageResult);
     }
 
     @GetMapping("/export-excel")

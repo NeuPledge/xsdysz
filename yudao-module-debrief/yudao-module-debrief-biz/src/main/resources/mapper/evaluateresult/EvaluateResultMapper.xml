@@ -10,10 +10,135 @@
      -->
 
     <select id="groupByCount" resultType="java.util.Map">
-        select party_member_id,count(comment) as comment from debrief_evaluate_result
+        select party_member_id, count(comment) as comment
+        from debrief_evaluate_result
         where `comment` = #{comment}
           and `college_id` = #{collegeId,jdbcType=BIGINT}
-        group by party_member_id,comment;
+        group by party_member_id, comment;
+    </select>
+
+    <!--  近30日测评完成党员进度趋势  -->
+    <select id="finishProgressTrend" resultType="cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.ProgressTrendDto">
+        select
+            date(create_time) as `day`, count(distinct party_member_id) as `dayCount`, SUM(COUNT(DISTINCT party_member_id)) OVER (ORDER BY DATE(create_time)) AS `totalCount`
+        from
+            debrief_evaluate_result
+        where create_time >= CURDATE() - INTERVAL 29 day and create_time &lt;= CURDATE() + INTERVAL 1 day
+        group by date(create_time)
+        order by `day` asc
+    </select>
+    <!--  近30日每日测评票数  -->
+    <select id="commentTrend" resultType="cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.CommentTrendDto">
+        select
+            date(create_time) as `day`, comment, count(distinct party_member_id) as `num`
+        from
+            debrief_evaluate_result
+        where create_time >= CURDATE() - INTERVAL 29 day and create_time &lt;= CURDATE() + INTERVAL 1 day
+        group by date(create_time), comment
+        order by `day` asc
+    </select>
+
+    <!--  学院测评进度  -->
+    <select id="collegeProgress" resultType="cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.CollegeProgressDto">
+        select
+            `all`.college_id,
+            ddc.college_name,
+            num,
+            total,
+            round(100 * num / total, 1) as ratio
+        from
+            (
+            select
+            college_id,
+            count(1) as `total`
+            from
+            debrief_party_member
+            group by
+            college_id) `all`
+            left join
+            (
+            select
+            college_id,
+            count(distinct party_member_id) as `num`
+            from
+            debrief_evaluate_result
+            group by
+            college_id ) result
+        on
+            `all`.college_id = result.college_id
+            left join debrief_dic_college ddc on
+            ddc.id = `all`.college_id
+        order by
+            ratio asc
+    </select>
+
+    <!--  支部测评进度  -->
+    <select id="branchProgress" resultType="cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.BranchProgressDto">
+        select
+            `all`.branch_id,
+            ddc.branch_name,
+            num,
+            total,
+            round(100 * num / total, 1) as ratio
+        from
+            (
+                select
+                    branch_id,
+                    count(1) as `total`
+                from
+                    debrief_party_member
+                group by
+                    branch_id) `all`
+                left join
+            (
+                select
+                    branch_id,
+                    count(distinct party_member_id) as `num`
+                from
+                    debrief_evaluate_result
+                group by
+                    branch_id ) result
+            on
+                `all`.branch_id = result.branch_id
+                left join debrief_dic_branch ddc on
+                ddc.id = `all`.branch_id
+        order by
+            ratio asc
+    </select>
+
+    <!--  班级测评进度  -->
+    <select id="gradeProgress" resultType="cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.GradeProgressDto">
+
+        select
+            `all`.grade_id,
+            ddc.grade_name,
+            ifnull(num,0) as num,
+            ifnull(total,0) as total ,
+            ifnull(round(100 * num / total, 1),0)  as ratio
+        from
+            (
+                select
+                    grade_id,
+                    count(1) as `total`
+                from
+                    debrief_party_member
+                group by
+                    grade_id) `all`
+                left join
+            (
+                select
+                    grade_id,
+                    count(distinct party_member_id) as `num`
+                from
+                    debrief_evaluate_result
+                group by
+                    grade_id ) result
+            on
+                `all`.grade_id = result.grade_id
+                left join debrief_dic_grade ddc on
+                ddc.id = `all`.grade_id
+        order by
+            ratio asc
     </select>
 
 
