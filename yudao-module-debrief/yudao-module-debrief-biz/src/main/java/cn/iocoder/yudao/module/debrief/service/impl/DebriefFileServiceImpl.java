@@ -297,6 +297,13 @@ public class DebriefFileServiceImpl implements FileService {
 
         // 导出 Excel
         try {
+            response.setContentType("application/octet-stream");
+            response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            response.addHeader("Content-Disposition", "attachment; filename=" + new String((dicCollege.getCollegeName() + "测评票数明细.xlsx").getBytes(), "iso-8859-1"));
+            response.addHeader("Pragma", "no-cache");
+            response.addHeader("Expires", "0");
+            response.addHeader("Last-Modified", new Date().toString());
+            response.addHeader("ETag", String.valueOf(System.currentTimeMillis()));
             ExcelUtils.write(response, dicCollege.getCollegeName() + ".xls", "数据", PartyMemberResultData.class,
                     partyMemberResultDataList);
         } catch (IOException e) {
@@ -356,6 +363,15 @@ public class DebriefFileServiceImpl implements FileService {
 //        return export(getCollegeComment(fileName, partyMemberCommentDatas), fileName);
 
         try {
+
+            response.setContentType("application/octet-stream");
+            response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            response.addHeader("Content-Disposition", "attachment; filename=" + new String((dicCollege.getCollegeName() + "测评评价内容.xlsx").getBytes(), "iso-8859-1"));
+            response.addHeader("Pragma", "no-cache");
+            response.addHeader("Expires", "0");
+            response.addHeader("Last-Modified", new Date().toString());
+            response.addHeader("ETag", String.valueOf(System.currentTimeMillis()));
+
             ExcelUtils.write(response, dicCollege.getCollegeName() + ".xls", "数据", PartyMemberCommentData.class,
                     partyMemberCommentDatas);
         } catch (IOException e) {
