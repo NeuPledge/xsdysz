@@ -2,6 +2,9 @@ package cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult;
 
 import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.CollegeProgressDto;
 import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.ProgressTrendDto;
+import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.UnCommentStudent;
+import cn.iocoder.yudao.module.debrief.dal.dataobject.diccollege.DicCollegeDO;
+import cn.iocoder.yudao.module.debrief.service.diccollege.DicCollegeService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -42,6 +45,9 @@ public class EvaluateResultController {
 
     @Resource
     private EvaluateResultService evaluateResultService;
+
+    @Resource
+    private DicCollegeService dicCollegeService;
 
     @PostMapping("/create")
     @Operation(summary = "创建评价结果")
@@ -130,6 +136,24 @@ public class EvaluateResultController {
         // 导出 Excel
         ExcelUtils.write(response, "评价结果.xls", "数据", EvaluateResultRespVO.class,
                 BeanUtils.toBean(list, EvaluateResultRespVO.class));
+    }
+
+    @GetMapping("/uncomment-student-excel")
+    @Operation(summary = "导出某个学院未参与的学生")
+    @OperateLog(type = EXPORT)
+    public void uncommentStudent(@RequestParam Long collegeId, HttpServletResponse response) throws IOException {
+        DicCollegeDO dicCollege = dicCollegeService.getDicCollege(collegeId);
+        List<UnCommentStudent> unCommentStudents = evaluateResultService.uncommentStudent(collegeId);
+        // 导出 Excel
+        ExcelUtils.write(response, dicCollege.getCollegeName() + "未参与学生名单.xls", "数据", UnCommentStudent.class,
+                BeanUtils.toBean(unCommentStudents, UnCommentStudent.class));
+    }
+
+    @GetMapping("/analysis-report")
+    @Operation(summary = "按照模板导出测评结果")
+    @OperateLog(type = EXPORT)
+    public void analysisReport(@RequestParam Long collegeId, HttpServletResponse response) throws IOException {
+         evaluateResultService.analysisReport(collegeId, response);
     }
 
 }

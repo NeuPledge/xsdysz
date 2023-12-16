@@ -23,7 +23,7 @@
             date(create_time) as `day`, count(distinct party_member_id) as `dayCount`, SUM(COUNT(DISTINCT party_member_id)) OVER (ORDER BY DATE(create_time)) AS `totalCount`
         from
             debrief_evaluate_result
-        where create_time >= CURDATE() - INTERVAL 29 day and create_time &lt;= CURDATE() + INTERVAL 1 day
+        where create_time >= #{startDate} and create_time &lt;= CURDATE() + INTERVAL 1 day
         group by date(create_time)
         order by `day` asc
     </select>
@@ -38,14 +38,24 @@
         order by `day` asc
     </select>
 
+    <select id="unCommentStudent" resultType="cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.UnCommentStudent">
+        select t1.id,t1.name,t1.student_number,t1.grade_name,c.college_name
+        from (
+                 (SELECT * from debrief_student where id in (select distinct * from
+                     (select distinct id from debrief_student where id not in
+                                                                    (select distinct commenter_id from debrief_evaluate_result)
+                     ) b) order by college_id asc) t1 left join debrief_dic_college c on t1.college_id = c.id)
+        where t1.college_id = 1
+    </select>
+
     <!--  学院测评进度  -->
     <select id="collegeProgress" resultType="cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.CollegeProgressDto">
         select
             `all`.college_id,
             ddc.college_name,
-            num,
-            total,
-            round(100 * num / total, 1) as ratio
+            ifnull(num,0) as num,
+            ifnull(total,0) as total ,
+            ifnull(round(100 * num / total, 1),0)  as ratio
         from
             (
             select
@@ -77,9 +87,9 @@
         select
             `all`.branch_id,
             ddc.branch_name,
-            num,
-            total,
-            round(100 * num / total, 1) as ratio
+            ifnull(num,0) as num,
+            ifnull(total,0) as total ,
+            ifnull(round(100 * num / total, 1),0)  as ratio
         from
             (
                 select
@@ -141,5 +151,52 @@
             ratio asc
     </select>
 
+    <select id="c1Result" resultType="cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.CtypeResult">
+        select a.${ctype} as ctype,a.stype,a.num,ifnull(round(a.num/b.partymembercount,4),0) rate from (
+        select ${ctype},stype,count(1) as num
+        from (
+        select
+        party_member_id,student_number,stype,total_num,
+        c1_num,c1_rate, case when c1_rate = 100 then 'c1_100' when c1_rate >= 90 and c1_rate >= 99 then 'c1_90' when c1_rate >= 80 and c1_rate >= 89 then 'c1_80' when c1_rate >= 70 and c1_rate >= 79 then 'c1_70' when c1_rate >= 60 and c1_rate >= 69 then 'c1_60' when c1_rate >= 50 and c1_rate >= 59 then 'c1_50' else 'c1_less_50' end c1_type,
+        c12_num,c12_rate,case when c12_rate = 100 then 'c12_100' when c12_rate >= 90 and c12_rate >= 99 then 'c12_90' when c12_rate >= 80 and c12_rate >= 89 then 'c12_80' when c12_rate >= 70 and c12_rate >= 79 then 'c12_70' when c12_rate >= 60 and c12_rate >= 69 then 'c12_60' when c12_rate >= 50 and c12_rate >= 59 then 'c12_50' else 'c12_less_50' end c12_type,
+        c3_num,c3_rate,case when c3_rate &lt; 10 then 'c3_less_10' when c3_rate >= 10 and c3_rate >= 19 then 'c3_10' when c3_rate >= 20 and c3_rate >= 29 then 'c3_20' when c3_rate >= 30 and c3_rate >= 39 then 'c3_30' when c3_rate >= 40 and c3_rate >= 49 then 'c3_40' when c3_rate &lt; 50 then 'c3_less_50' when c3_rate >= 50 then 'c3_more_50' end c3_type
+        from (
+        select party_member_id,
+        dpm.student_number,
+        case length(dpm.student_number) when 8 then 'benke' else 'yanjiusheng' end as stype,
+        sum(num) total_num,
+        sum(num * c1) c1_num,
+        round(100*sum(num * c1)/sum(num),2) c1_rate,
+        sum(num * c12) c12_num,
+        round(100*sum(num * c12)/sum(num),2) c12_rate,
+        sum(num * c3) c3_num,
+        round(100*sum(num * c3)/sum(num),2) c3_rate
+        from (
+        select
+        party_member_id, comment, count(1) as num,
+        case when comment=1 then 1 else 0 end as c1,
+        case when comment=1 or comment=2 then 1 else 0 end as c12,
+        case when comment=3 then 1 else 0 end as c3
+        from debrief_evaluate_result
+        where `college_id` = 41
+        group by party_member_id, comment order by party_member_id asc) subq
+        left join debrief_party_member dpm on dpm.id = subq.party_member_id
+        group by party_member_id
+        ) subq
+        ) subq
+        group by ${ctype},stype
+        ) a
+        left join
+        (	select stype,count(1) partymembercount from
+        (
+        select
+        case length(student_number) when 8 then 'benke' else 'yanjiusheng' end as stype
+        from (select distinct party_member_id,dpm.student_number  from debrief_evaluate_result der left join  debrief_party_member dpm on dpm.id = der.party_member_id
+        where der.`college_id` = 41) subq
+        ) subq
+        group by stype
+        ) b
+        on a.stype = b.stype
+    </select>
 
 </mapper>

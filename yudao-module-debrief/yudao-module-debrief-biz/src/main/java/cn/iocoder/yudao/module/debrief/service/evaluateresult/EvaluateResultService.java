@@ -3,6 +3,7 @@ package cn.iocoder.yudao.module.debrief.service.evaluateresult;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.BranchProgressDto;
 import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.CollegeProgressDto;
+import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.UnCommentStudent;
 import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.vo.BranchProgressRespVo;
 import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.vo.CommentTrendRespVO;
 import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.vo.EvaluateResultPageReqVO;
@@ -11,7 +12,9 @@ import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.vo.GradeP
 import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.vo.ProgressTrendRespVO;
 import cn.iocoder.yudao.module.debrief.dal.dataobject.evaluateresult.EvaluateResultDO;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -68,5 +71,9 @@ public interface EvaluateResultService {
     BranchProgressRespVo branchProgress();
 
     GradeProgressRespVo gradeProgress();
+
+    List<UnCommentStudent> uncommentStudent(Long collegeId);
+
+    void analysisReport(Long collegeId, HttpServletResponse response) throws IOException;
 
 }

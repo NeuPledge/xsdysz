@@ -118,8 +118,11 @@ public class StudentServiceImpl implements StudentService {
         checkEmpty(studentImportVos);
         checkStudentNumberRepeat(studentImportVos);
 
-        truncateData();
+//        truncateData();
         try {
+            Long stdBefore = studentMapper.selectCount();
+            Long partyMemberBefore = partyMemberMapper.selectCount();
+
 
             List<DicBranchDO> dicBranchDOS = insertBranchData(studentImportVos);
             Map<String, Long> branchMap = dicBranchDOS.stream().collect(Collectors.toMap(e -> e.getBranchName(), e -> e.getId()));
@@ -137,15 +140,15 @@ public class StudentServiceImpl implements StudentService {
 
             StudentImportRespVo studentImportRespVo = new StudentImportRespVo();
             studentImportRespVo.setStudentCountInFile(studentImportVos.size());
-            Long aLong = studentMapper.selectCount();
-            studentImportRespVo.setStudentCountInDb(aLong.intValue());
+            Long stdAfter = studentMapper.selectCount();
+            studentImportRespVo.setStudentCountInDb(stdAfter.intValue() - stdBefore.intValue());
 //        if (aLong != studentImportVos.size()) {
 //            studentImportRespVo.setStudentNotImport()
 //        }
 
-            Long aLong1 = partyMemberMapper.selectCount();
+            Long partyMemberAfter = partyMemberMapper.selectCount();
             studentImportRespVo.setPartyMemberCountInFile(partyMembers.size());
-            studentImportRespVo.setPartyMemberCountInDb(aLong1.intValue());
+            studentImportRespVo.setPartyMemberCountInDb(partyMemberAfter.intValue() - partyMemberBefore.intValue());
             return studentImportRespVo;
 
         } catch (Exception exception) {

@@ -8,6 +8,7 @@ import cn.iocoder.yudao.framework.mybatis.core.mapper.BaseMapperX;
 import cn.iocoder.yudao.module.debrief.dal.dataobject.diccollege.DicCollegeDO;
 import org.apache.ibatis.annotations.Mapper;
 import cn.iocoder.yudao.module.debrief.controller.admin.diccollege.vo.*;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 学院字典列 Mapper
@@ -23,5 +24,12 @@ public interface DicCollegeMapper extends BaseMapperX<DicCollegeDO> {
                 .betweenIfPresent(DicCollegeDO::getCreateTime, reqVO.getCreateTime())
                 .orderByDesc(DicCollegeDO::getId));
     }
+
+
+    // 计算某个学院 本科生和研究生党员的总人数
+    List<StypeCount> stypeCount(@Param("collegeId") Long collegeId);
+
+    // 参加测评学生人数
+    Integer studentCount(@Param("collegeId") Long collegeId);
 
 }

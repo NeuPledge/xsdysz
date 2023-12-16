@@ -8,8 +8,10 @@ import cn.iocoder.yudao.framework.mybatis.core.mapper.BaseMapperX;
 import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.BranchProgressDto;
 import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.CollegeProgressDto;
 import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.CommentTrendDto;
+import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.CtypeResult;
 import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.GradeProgressDto;
 import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.ProgressTrendDto;
+import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.UnCommentStudent;
 import cn.iocoder.yudao.module.debrief.dal.dataobject.evaluateresult.EvaluateResultDO;
 import org.apache.ibatis.annotations.Mapper;
 import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.vo.*;
@@ -39,13 +41,18 @@ public interface EvaluateResultMapper extends BaseMapperX<EvaluateResultDO> {
     List<Map<String, Long>> groupByCount(@Param("comment") Integer comment, @Param("collegeId") Long collegeId);
 
 
-    List<ProgressTrendDto> finishProgressTrend();
+    List<ProgressTrendDto> finishProgressTrend(@Param("startDate") String startDate);
 
     List<CommentTrendDto> commentTrend();
+
+    List<UnCommentStudent> unCommentStudent(@Param("collegeId") Long collegeId);
 
     List<CollegeProgressDto> collegeProgress();
 
     List<BranchProgressDto> branchProgress();
 
     List<GradeProgressDto> gradeProgress();
+
+
+    List<CtypeResult> c1Result(@Param("collegeId") Long collegeId, @Param("ctype") String ctype);
 }
