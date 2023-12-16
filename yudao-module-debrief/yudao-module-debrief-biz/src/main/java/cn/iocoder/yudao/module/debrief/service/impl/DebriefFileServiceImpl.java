@@ -1,8 +1,11 @@
 package cn.iocoder.yudao.module.debrief.service.impl;
 
 import cn.iocoder.yudao.framework.common.exception.ServiceException;
+import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
+import cn.iocoder.yudao.framework.excel.core.util.ExcelUtils;
 import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.iocoder.yudao.module.debrief.config.DebriefConfig;
+import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.UnCommentStudent;
 import cn.iocoder.yudao.module.debrief.controller.app.vo.PartyMemberCommentData;
 import cn.iocoder.yudao.module.debrief.controller.app.vo.PartyMemberResultData;
 import cn.iocoder.yudao.module.debrief.dal.dataobject.diccollege.DicCollegeDO;
@@ -25,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -215,7 +219,7 @@ public class DebriefFileServiceImpl implements FileService {
         headers.add("ETag", String.valueOf(System.currentTimeMillis()));
 
         return ResponseEntity.ok().headers(headers).contentLength(file.length())
-            .contentType(MediaType.parseMediaType("application/octet-stream")).body(new FileSystemResource(file));
+                .contentType(MediaType.parseMediaType("application/octet-stream")).body(new FileSystemResource(file));
     }
 
 /*    @Override
@@ -235,10 +239,10 @@ public class DebriefFileServiceImpl implements FileService {
      * @param collegeId 学院id.
      */
     @Override
-    public ResponseEntity<FileSystemResource> getCollegeFileImSharding(Long collegeId) {
+    public void getCollegeFileImSharding(Long collegeId, HttpServletResponse response) {
 
         if (!debriefConfig.getDownloadEnable()) {
-            return null;
+            return;
         }
 
         DicCollegeDO dicCollege = dicCollegeMapper.selectById(collegeId);
@@ -289,8 +293,17 @@ public class DebriefFileServiceImpl implements FileService {
             partyMemberResultDataList.add(partyMemberResultData);
         }
 
-        String fileName = dicCollege.getId() + "_party_member_sharding_votes.xls";
-        return export(getCollegeFile(fileName, partyMemberResultDataList), fileName);
+//        String fileName = dicCollege.getId() + "_party_member_sharding_votes.xls";
+
+        // 导出 Excel
+        try {
+            ExcelUtils.write(response, dicCollege.getCollegeName() + ".xls", "数据", PartyMemberResultData.class,
+                    partyMemberResultDataList);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+//        return export(getCollegeFile(fileName, partyMemberResultDataList), fileName);
     }
 
     /**
@@ -299,10 +312,10 @@ public class DebriefFileServiceImpl implements FileService {
      * @param collegeId 学院id.
      */
     @Override
-    public ResponseEntity<FileSystemResource> getCollegeCommentSharding(Long collegeId) {
+    public void getCollegeCommentSharding(Long collegeId, HttpServletResponse response) {
 
         if (!debriefConfig.getDownloadEnable()) {
-            return null;
+            return;
         }
 
         DicCollegeDO dicCollege = dicCollegeMapper.selectById(collegeId);
@@ -322,7 +335,7 @@ public class DebriefFileServiceImpl implements FileService {
             idMapGradeName.put(dicGrade.getId(), dicGrade.getGradeName());
         }
         List<Map<String, Object>> memberMapContent = partyMemberMapper
-            .selectCollegeCommentByCollegeIdSharding(collegeId);
+                .selectCollegeCommentByCollegeIdSharding(collegeId);
         List<PartyMemberCommentData> partyMemberCommentDatas = new ArrayList<>();
 
         for (Map<String, Object> stringObjectMap : memberMapContent) {
@@ -339,8 +352,15 @@ public class DebriefFileServiceImpl implements FileService {
             partyMemberCommentData.setName(partyMember.getName());
             partyMemberCommentDatas.add(partyMemberCommentData);
         }
-        String fileName = dicCollege.getId() + "_comments_sharding.xls";
-        return export(getCollegeComment(fileName, partyMemberCommentDatas), fileName);
+//        String fileName = dicCollege.getId() + "_comments_sharding.xls";
+//        return export(getCollegeComment(fileName, partyMemberCommentDatas), fileName);
+
+        try {
+            ExcelUtils.write(response, dicCollege.getCollegeName() + ".xls", "数据", PartyMemberCommentData.class,
+                    partyMemberCommentDatas);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

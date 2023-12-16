@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Tag(name = "数据下载")
 @RestController
 @RequestMapping("/file")
@@ -27,8 +29,8 @@ public class DebriefFileController {
      */
     @Operation(summary = "实时下载指定学院的数据")
     @GetMapping("/immediate/{college_id}/college.xls")
-    public ResponseEntity<FileSystemResource> getCollegeData(@PathVariable("college_id") Long collegeId) {
-        return fileService.getCollegeFileImSharding(collegeId);
+    public void getCollegeData(@PathVariable("college_id") Long collegeId, HttpServletResponse response) {
+        fileService.getCollegeFileImSharding(collegeId, response);
     }
 
 /*    @ApiOperation("test")
@@ -43,8 +45,8 @@ public class DebriefFileController {
      */
     @Operation(summary = "实时下载指定学院的党员评价数据")
     @GetMapping("/immediate/comment/{college_id}/college_comment.xls")
-    public ResponseEntity<FileSystemResource> getCollegeCommentData(@PathVariable("college_id") Long collegeId) {
-        return fileService.getCollegeCommentSharding(collegeId);
+    public void getCollegeCommentData(@PathVariable("college_id") Long collegeId, HttpServletResponse response) {
+        fileService.getCollegeCommentSharding(collegeId, response);
     }
 
 

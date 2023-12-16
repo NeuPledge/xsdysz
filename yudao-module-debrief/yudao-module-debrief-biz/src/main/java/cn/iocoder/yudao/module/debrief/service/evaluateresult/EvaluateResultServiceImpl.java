@@ -328,13 +328,13 @@ public class EvaluateResultServiceImpl implements EvaluateResultService {
         analysisTemplate.setC1_6_5(analysisTemplate.getC1_6_3() + analysisTemplate.getC1_6_1());
         analysisTemplate.setC1_7_5(analysisTemplate.getC1_7_3() + analysisTemplate.getC1_7_1());
         DecimalFormat decimalFormat = new DecimalFormat("#.####");
-        analysisTemplate.setC1_1_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC1_1_5() / analysisTemplate.getCoverPartyMemberCount())));
-        analysisTemplate.setC1_2_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC1_2_5() / analysisTemplate.getCoverPartyMemberCount())));
-        analysisTemplate.setC1_3_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC1_3_5() / analysisTemplate.getCoverPartyMemberCount())));
-        analysisTemplate.setC1_4_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC1_4_5() / analysisTemplate.getCoverPartyMemberCount())));
-        analysisTemplate.setC1_5_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC1_5_5() / analysisTemplate.getCoverPartyMemberCount())));
-        analysisTemplate.setC1_6_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC1_6_5() / analysisTemplate.getCoverPartyMemberCount())));
-        analysisTemplate.setC1_7_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC1_7_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC1_1_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC1_1_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC1_2_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC1_2_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC1_3_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC1_3_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC1_4_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC1_4_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC1_5_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC1_5_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC1_6_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC1_6_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC1_7_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC1_7_5() / analysisTemplate.getCoverPartyMemberCount())));
 
 
         List<CtypeResult> c12Type = evaluateResultMapper.c1Result(collegeId, "c12_type");
@@ -376,13 +376,13 @@ public class EvaluateResultServiceImpl implements EvaluateResultService {
         analysisTemplate.setC12_5_5(analysisTemplate.getC12_5_3() + analysisTemplate.getC12_5_1());
         analysisTemplate.setC12_6_5(analysisTemplate.getC12_6_3() + analysisTemplate.getC12_6_1());
         analysisTemplate.setC12_7_5(analysisTemplate.getC12_7_3() + analysisTemplate.getC12_7_1());
-        analysisTemplate.setC12_1_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC12_1_5() / analysisTemplate.getCoverPartyMemberCount())));
-        analysisTemplate.setC12_2_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC12_2_5() / analysisTemplate.getCoverPartyMemberCount())));
-        analysisTemplate.setC12_3_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC12_3_5() / analysisTemplate.getCoverPartyMemberCount())));
-        analysisTemplate.setC12_4_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC12_4_5() / analysisTemplate.getCoverPartyMemberCount())));
-        analysisTemplate.setC12_5_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC12_5_5() / analysisTemplate.getCoverPartyMemberCount())));
-        analysisTemplate.setC12_6_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC12_6_5() / analysisTemplate.getCoverPartyMemberCount())));
-        analysisTemplate.setC12_7_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC12_7_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC12_1_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC12_1_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC12_2_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC12_2_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC12_3_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC12_3_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC12_4_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC12_4_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC12_5_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC12_5_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC12_6_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC12_6_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC12_7_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC12_7_5() / analysisTemplate.getCoverPartyMemberCount())));
 
         List<CtypeResult> c3Type = evaluateResultMapper.c1Result(collegeId, "c3_type");
         Map<String, CtypeResult> c3Map = c3Type.stream().collect(Collectors.toMap(e -> e.getCtype() + "_" + e.getStype(), e -> e));
@@ -418,12 +418,12 @@ public class EvaluateResultServiceImpl implements EvaluateResultService {
         analysisTemplate.setC3_4_5(analysisTemplate.getC3_4_3() + analysisTemplate.getC3_4_1());
         analysisTemplate.setC3_5_5(analysisTemplate.getC3_5_3() + analysisTemplate.getC3_5_1());
         analysisTemplate.setC3_6_5(analysisTemplate.getC3_6_3() + analysisTemplate.getC3_6_1());
-        analysisTemplate.setC3_1_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC3_1_5() / analysisTemplate.getCoverPartyMemberCount())));
-        analysisTemplate.setC3_2_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC3_2_5() / analysisTemplate.getCoverPartyMemberCount())));
-        analysisTemplate.setC3_3_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC3_3_5() / analysisTemplate.getCoverPartyMemberCount())));
-        analysisTemplate.setC3_4_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC3_4_5() / analysisTemplate.getCoverPartyMemberCount())));
-        analysisTemplate.setC3_5_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC3_5_5() / analysisTemplate.getCoverPartyMemberCount())));
-        analysisTemplate.setC3_6_6(Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC3_6_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC3_1_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC3_1_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC3_2_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC3_2_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC3_3_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC3_3_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC3_4_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC3_4_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC3_5_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC3_5_5() / analysisTemplate.getCoverPartyMemberCount())));
+        analysisTemplate.setC3_6_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC3_6_5() / analysisTemplate.getCoverPartyMemberCount())));
 
 
         InputStream inputStream = ResourceUtil.getStreamSafe("template/东北大学学生党员述责测评结果统计表.xlsx");
