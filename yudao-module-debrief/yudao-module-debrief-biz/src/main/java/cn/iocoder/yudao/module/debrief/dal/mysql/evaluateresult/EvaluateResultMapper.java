@@ -43,7 +43,7 @@ public interface EvaluateResultMapper extends BaseMapperX<EvaluateResultDO> {
 
     List<ProgressTrendDto> finishProgressTrend(@Param("startDate") String startDate);
 
-    List<CommentTrendDto> commentTrend();
+    List<CommentTrendDto> commentTrend(@Param("startDate") String startDate);
 
     List<UnCommentStudent> unCommentStudent(@Param("collegeId") Long collegeId);
 

@@ -124,7 +124,6 @@ public class EvaluateResultServiceImpl implements EvaluateResultService {
     @Override
     public ProgressTrendRespVO finishProgressTrend() {
 
-
         DictDataRespDTO dictData = dictDataApi.parseDictData("debrief_dict", "测评起始时间");
         String startDate = dictData.getValue();
         List<ProgressTrendDto> progressTrendDtos = evaluateResultMapper.finishProgressTrend(startDate);
@@ -147,7 +146,9 @@ public class EvaluateResultServiceImpl implements EvaluateResultService {
 
     @Override
     public CommentTrendRespVO commentTrend() {
-        List<CommentTrendDto> commentTrendDtos = evaluateResultMapper.commentTrend();
+        DictDataRespDTO dictData = dictDataApi.parseDictData("debrief_dict", "测评起始时间");
+        String startDate = dictData.getValue();
+        List<CommentTrendDto> commentTrendDtos = evaluateResultMapper.commentTrend(startDate);
         Map<String, List<CommentTrendDto>> dayMap = commentTrendDtos.stream().collect(Collectors.groupingBy(e -> e.getDay(), Collectors.toList()));
         List<String> days = new ArrayList<>();
         List<Long> comment1List = new ArrayList<>();
