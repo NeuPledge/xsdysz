@@ -38,6 +38,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -150,6 +152,9 @@ public class EvaluateResultServiceImpl implements EvaluateResultService {
         String startDate = dictData.getValue();
         List<CommentTrendDto> commentTrendDtos = evaluateResultMapper.commentTrend(startDate);
         Map<String, List<CommentTrendDto>> dayMap = commentTrendDtos.stream().collect(Collectors.groupingBy(e -> e.getDay(), Collectors.toList()));
+
+        dayMap = sortMapByDate(dayMap);
+
         List<String> days = new ArrayList<>();
         List<Long> comment1List = new ArrayList<>();
         List<Long> comment2List = new ArrayList<>();
@@ -179,6 +184,22 @@ public class EvaluateResultServiceImpl implements EvaluateResultService {
         commentTrendRespVO.setComment2(comment2List);
         commentTrendRespVO.setComment3(comment3List);
         return commentTrendRespVO;
+    }
+
+
+    public static Map<String, List<CommentTrendDto>> sortMapByDate(Map<String, List<CommentTrendDto>> inputMap) {
+        // 使用LinkedHashMap保持插入顺序
+        LinkedHashMap<String, List<CommentTrendDto>> sortedMap = inputMap.entrySet()
+                .stream()
+                .sorted(Comparator.comparing(Map.Entry::getKey))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+
+        return sortedMap;
     }
 
     @Override
@@ -400,18 +421,18 @@ public class EvaluateResultServiceImpl implements EvaluateResultService {
         analysisTemplate.setC3_5_2(c3Map.getOrDefault("c3_40_benke", defaultV).getRate());
         analysisTemplate.setC3_6_2(c3Map.getOrDefault("c3_less_50_benke", defaultV).getRate());
 
-        analysisTemplate.setC3_1_3(c3Map.getOrDefault("c3_less_10_benke", defaultV).getNum());
-        analysisTemplate.setC3_2_3(c3Map.getOrDefault("c3_10_benke", defaultV).getNum());
-        analysisTemplate.setC3_3_3(c3Map.getOrDefault("c3_20_benke", defaultV).getNum());
-        analysisTemplate.setC3_4_3(c3Map.getOrDefault("c3_30_benke", defaultV).getNum());
-        analysisTemplate.setC3_5_3(c3Map.getOrDefault("c3_40_benke", defaultV).getNum());
-        analysisTemplate.setC3_6_3(c3Map.getOrDefault("c3_less_50_benke", defaultV).getNum());
-        analysisTemplate.setC3_1_4(c3Map.getOrDefault("c3_less_10_benke", defaultV).getRate());
-        analysisTemplate.setC3_2_4(c3Map.getOrDefault("c3_10_benke", defaultV).getRate());
-        analysisTemplate.setC3_3_4(c3Map.getOrDefault("c3_20_benke", defaultV).getRate());
-        analysisTemplate.setC3_4_4(c3Map.getOrDefault("c3_30_benke", defaultV).getRate());
-        analysisTemplate.setC3_5_4(c3Map.getOrDefault("c3_40_benke", defaultV).getRate());
-        analysisTemplate.setC3_6_4(c3Map.getOrDefault("c3_less_50_benke", defaultV).getRate());
+        analysisTemplate.setC3_1_3(c3Map.getOrDefault("c3_less_10_yanjiusheng", defaultV).getNum());
+        analysisTemplate.setC3_2_3(c3Map.getOrDefault("c3_10_yanjiusheng", defaultV).getNum());
+        analysisTemplate.setC3_3_3(c3Map.getOrDefault("c3_20_yanjiusheng", defaultV).getNum());
+        analysisTemplate.setC3_4_3(c3Map.getOrDefault("c3_30_yanjiusheng", defaultV).getNum());
+        analysisTemplate.setC3_5_3(c3Map.getOrDefault("c3_40_yanjiusheng", defaultV).getNum());
+        analysisTemplate.setC3_6_3(c3Map.getOrDefault("c3_less_50_yanjiusheng", defaultV).getNum());
+        analysisTemplate.setC3_1_4(c3Map.getOrDefault("c3_less_10_yanjiusheng", defaultV).getRate());
+        analysisTemplate.setC3_2_4(c3Map.getOrDefault("c3_10_yanjiusheng", defaultV).getRate());
+        analysisTemplate.setC3_3_4(c3Map.getOrDefault("c3_20_yanjiusheng", defaultV).getRate());
+        analysisTemplate.setC3_4_4(c3Map.getOrDefault("c3_30_yanjiusheng", defaultV).getRate());
+        analysisTemplate.setC3_5_4(c3Map.getOrDefault("c3_40_yanjiusheng", defaultV).getRate());
+        analysisTemplate.setC3_6_4(c3Map.getOrDefault("c3_less_50_yanjiusheng", defaultV).getRate());
 
         analysisTemplate.setC3_1_5(analysisTemplate.getC3_1_3() + analysisTemplate.getC3_1_1());
         analysisTemplate.setC3_2_5(analysisTemplate.getC3_2_3() + analysisTemplate.getC3_2_1());
