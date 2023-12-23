@@ -54,4 +54,6 @@ public interface StudentService {
     PageResult<StudentDO> getStudentPage(StudentPageReqVO pageReqVO);
 
     StudentImportRespVo importData(MultipartFile file);
+
+    StudentImportRespVo importIncreaseData(MultipartFile file);
 }

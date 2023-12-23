@@ -55,6 +55,14 @@ public class StudentController {
         return success(studentImportRespVo);
     }
 
+    @PostMapping("/import-increase")
+    @Operation(summary = "导入增量数据")
+    @PreAuthorize("@ss.hasPermission('debrief:student:create')")
+    public CommonResult<StudentImportRespVo> importIncreaseData(FileUploadReqVO uploadReqVO) {
+        StudentImportRespVo studentImportRespVo = studentService.importIncreaseData(uploadReqVO.getFile());
+        return success(studentImportRespVo);
+    }
+
     @PutMapping("/update")
     @Operation(summary = "更新学生信息")
     @PreAuthorize("@ss.hasPermission('debrief:student:update')")
