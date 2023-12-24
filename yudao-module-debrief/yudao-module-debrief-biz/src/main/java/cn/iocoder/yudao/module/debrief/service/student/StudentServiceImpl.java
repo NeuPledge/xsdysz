@@ -117,26 +117,25 @@ public class StudentServiceImpl implements StudentService {
         checkEmpty(studentImportVos);
         checkStudentNumberRepeat(studentImportVos);
 
-        try {
 //            Long stdBefore = studentMapper.selectCount();
 //            Long partyMemberBefore = partyMemberMapper.selectCount();
 
 
-            List<DicBranchDO> dicBranchDOS = insertIncreaseBranchData(studentImportVos);
-            Map<String, Long> branchMap = dicBranchDOS.stream().collect(Collectors.toMap(e -> e.getBranchName(), e -> e.getId()));
-            List<DicCollegeDO> dicCollegeDOS = insertIncreaseCollegeData(studentImportVos);
-            Map<String, Long> collegeMap = dicCollegeDOS.stream().collect(Collectors.toMap(e -> e.getCollegeName(), e -> e.getId()));
-            List<DicGradeDO> dicGradeDOS = insertIncreaseGradeData(studentImportVos, collegeMap);
-            Map<String, Long> gradeMap = dicGradeDOS.stream().collect(Collectors.toMap(e -> e.getGradeName(), e -> e.getId()));
+        List<DicBranchDO> dicBranchDOS = insertIncreaseBranchData(studentImportVos);
+        Map<String, Long> branchMap = dicBranchDOS.stream().collect(Collectors.toMap(e -> e.getBranchName(), e -> e.getId()));
+        List<DicCollegeDO> dicCollegeDOS = insertIncreaseCollegeData(studentImportVos);
+        Map<String, Long> collegeMap = dicCollegeDOS.stream().collect(Collectors.toMap(e -> e.getCollegeName(), e -> e.getId()));
+        List<DicGradeDO> dicGradeDOS = insertIncreaseGradeData(studentImportVos, collegeMap);
+        Map<String, Long> gradeMap = dicGradeDOS.stream().collect(Collectors.toMap(e -> gradeKey(e.getGradeName(), e.getCollegeId()), e -> e.getId()));
 
-            List<StudentDO> studentDOS = insertIncreaseStudentData(studentImportVos, collegeMap, gradeMap);
-            Map<String, Long> studentMap = studentDOS.stream().collect(Collectors.toMap(e -> e.getStudentNumber(), e -> e.getId()));
+        List<StudentDO> studentDOS = insertIncreaseStudentData(studentImportVos, collegeMap, gradeMap);
+        Map<String, Long> studentMap = studentDOS.stream().collect(Collectors.toMap(e -> e.getStudentNumber(), e -> e.getId()));
 
-            List<StudentImportVo> partyMembers = studentImportVos.stream().filter(e -> "是".equals(e.getIsPartyMember())).collect(Collectors.toList());
-            insertIncreasePartyMemberData(partyMembers, branchMap, collegeMap, gradeMap, studentMap);
+        List<StudentImportVo> partyMembers = studentImportVos.stream().filter(e -> "是".equals(e.getIsPartyMember())).collect(Collectors.toList());
+        insertIncreasePartyMemberData(partyMembers, branchMap, collegeMap, gradeMap, studentMap);
 
 
-            StudentImportRespVo studentImportRespVo = new StudentImportRespVo();
+        StudentImportRespVo studentImportRespVo = new StudentImportRespVo();
 //            studentImportRespVo.setStudentCountInFile(studentImportVos.size());
 //            Long stdAfter = studentMapper.selectCount();
 //            studentImportRespVo.setStudentCountInDb(stdAfter.intValue() - stdBefore.intValue());
@@ -146,13 +145,7 @@ public class StudentServiceImpl implements StudentService {
 //            Long partyMemberAfter = partyMemberMapper.selectCount();
 //            studentImportRespVo.setPartyMemberCountInFile(partyMembers.size());
 //            studentImportRespVo.setPartyMemberCountInDb(partyMemberAfter.intValue() - partyMemberBefore.intValue());
-            return studentImportRespVo;
-
-        } catch (Exception exception) {
-
-            throw new RuntimeException(exception.getMessage());
-
-        }
+        return studentImportRespVo;
     }
 
     @Override
@@ -289,26 +282,36 @@ public class StudentServiceImpl implements StudentService {
         return dicCollegeDOS;
     }
 
+    private String gradeKey(String gradeName, Long collegeId) {
+        return gradeName + "_#_" + collegeId;
+    }
+
     private List<DicGradeDO> insertIncreaseGradeData(List<StudentImportVo> studentImportVos, Map<String, Long> collegeMap) {
         List<DicGradeDO> dicGradeDOS = dicGradeMapper.selectList();
-        List<String> existGradeNames = dicGradeDOS.stream().filter(e -> StringUtils.isNotEmpty(e.getGradeName())).map(e -> e.getGradeName()).distinct().collect(Collectors.toList());
-        Map<String, String> gradeNameMapCollegeName = studentImportVos.stream().filter(e -> StringUtils.isNotEmpty(e.getGradeName()) && StringUtils.isNotEmpty(e.getCollegeName()))
-                .distinct()
-                .collect(Collectors.toMap(e -> e.getGradeName(), e -> e.getCollegeName(), (v1, v2) -> v1));
+        // 班级名称_学院ID
+        List<String> existGradeNames = dicGradeDOS.stream()
+                .filter(e -> StringUtils.isNotEmpty(e.getGradeName()))
+                .map(e -> gradeKey(e.getGradeName(), e.getCollegeId())).distinct().collect(Collectors.toList());
+
+        List<String> importGradeNames = studentImportVos.stream().filter(e -> StringUtils.isNotEmpty(e.getGradeName()) && StringUtils.isNotEmpty(e.getCollegeName()))
+                .map(e -> gradeKey(e.getGradeName(), collegeMap.get(e.getCollegeName()))).distinct().collect(Collectors.toList());
+
         List<DicGradeDO> toBeInsert = new ArrayList<>();
-        for (String gradeName : gradeNameMapCollegeName.keySet()) {
-            if (existGradeNames.contains(gradeName)) {
+
+        for (String gradeNameId : importGradeNames) {
+            if (existGradeNames.contains(gradeNameId)) {
                 continue;
             }
-
-            String collegeName = gradeNameMapCollegeName.get(gradeName);
-            Long collegeId = collegeMap.get(collegeName);
+            String[] split = gradeNameId.split("_#_");
+            String gradeName = split[0];
+            Long collegeId = Long.parseLong(split[1]);
             DicGradeDO dicCollegeDO = new DicGradeDO();
             dicCollegeDO.setCollegeId(collegeId);
             dicCollegeDO.setGradeName(gradeName);
 
             toBeInsert.add(dicCollegeDO);
         }
+
         if (CollectionUtil.isNotEmpty(toBeInsert)) {
             dicGradeMapper.insertBatch(toBeInsert);
         }
@@ -319,44 +322,55 @@ public class StudentServiceImpl implements StudentService {
     }
 
     private List<DicGradeDO> insertGradeData(List<StudentImportVo> studentImportVos, Map<String, Long> collegeMap) {
-        Map<String, String> gradeNameMapCollegeName = studentImportVos.stream().filter(e -> StringUtils.isNotEmpty(e.getGradeName()) && StringUtils.isNotEmpty(e.getCollegeName()))
-                .distinct()
-                .collect(Collectors.toMap(e -> e.getGradeName(), e -> e.getCollegeName(), (v1, v2) -> v1));
+        // 班级名称_学院ID
+        List<String> importGradeNames = studentImportVos.stream().filter(e -> StringUtils.isNotEmpty(e.getGradeName()) && StringUtils.isNotEmpty(e.getCollegeName()))
+                .map(e -> e.getGradeName() + "_#_" + collegeMap.get(e.getCollegeName())).distinct().collect(Collectors.toList());
+
         List<DicGradeDO> dicGradeDOS = new ArrayList<>();
-        for (String gradeName : gradeNameMapCollegeName.keySet()) {
-            String collegeName = gradeNameMapCollegeName.get(gradeName);
-            Long collegeId = collegeMap.get(collegeName);
+        for (String gradeNameId : importGradeNames) {
+
+            String[] split = gradeNameId.split("_#_");
+            String gradeName = split[0];
+            Long collegeId = Long.parseLong(split[1]);
             DicGradeDO dicCollegeDO = new DicGradeDO();
             dicCollegeDO.setCollegeId(collegeId);
             dicCollegeDO.setGradeName(gradeName);
 
             dicGradeDOS.add(dicCollegeDO);
         }
-        dicGradeMapper.insertBatch(dicGradeDOS);
+
+        if (CollectionUtil.isNotEmpty(dicGradeDOS)) {
+            dicGradeMapper.insertBatch(dicGradeDOS);
+        }
 
         return dicGradeDOS;
     }
 
     private List<StudentDO> insertIncreaseStudentData(List<StudentImportVo> studentImportVos,
-                                              Map<String, Long> collegeMap,
-                                              Map<String, Long> gradeMap) {
+                                                      Map<String, Long> collegeMap,
+                                                      Map<String, Long> gradeMap) {
         List<StudentDO> studentDOS = studentMapper.selectList();
         List<String> existStudentNumbers = studentDOS.stream().filter(e -> StringUtils.isNotEmpty(e.getStudentNumber())).map(e -> e.getStudentNumber()).distinct().collect(Collectors.toList());
 
         List<StudentDO> toBeInsert = new ArrayList<>();
         for (StudentImportVo studentImportVo : studentImportVos) {
-            if (existStudentNumbers.contains(studentImportVo.getStudentNumber())){
+            if (existStudentNumbers.contains(studentImportVo.getStudentNumber())) {
                 continue;
             }
             StudentDO studentDO = new StudentDO();
             studentDO.setName(studentImportVo.getName());
             studentDO.setStudentNumber(studentImportVo.getStudentNumber());
             studentDO.setGradeName(studentImportVo.getGradeName());
-            studentDO.setGradeId(gradeMap.get(studentImportVo.getGradeName()));
-            studentDO.setCollegeId(collegeMap.get(studentImportVo.getCollegeName()));
+            Long collegeId = collegeMap.get(studentImportVo.getCollegeName());
+            String gradeKey = gradeKey(studentImportVo.getGradeName(), collegeId);
+            Long gradeId = gradeMap.get(gradeKey);
+            studentDO.setGradeId(gradeId);
+            studentDO.setCollegeId(collegeId);
             toBeInsert.add(studentDO);
         }
-        studentMapper.insertBatch(toBeInsert);
+        if (CollectionUtil.isNotEmpty(toBeInsert)) {
+            studentMapper.insertBatch(toBeInsert);
+        }
 
         studentDOS.addAll(toBeInsert);
         return studentDOS;
@@ -381,10 +395,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     private void insertIncreasePartyMemberData(List<StudentImportVo> partyMembers,
-                                       Map<String, Long> branchMap,
-                                       Map<String, Long> collegeMap,
-                                       Map<String, Long> gradeMap,
-                                       Map<String, Long> studentMap
+                                               Map<String, Long> branchMap,
+                                               Map<String, Long> collegeMap,
+                                               Map<String, Long> gradeMap,
+                                               Map<String, Long> studentMap
     ) {
         List<PartyMemberDO> partyMemberDOS = partyMemberMapper.selectList();
         List<String> existStudentNumbers = partyMemberDOS.stream().filter(e -> StringUtils.isNotEmpty(e.getStudentNumber())).map(e -> e.getStudentNumber()).distinct().collect(Collectors.toList());
@@ -392,7 +406,7 @@ public class StudentServiceImpl implements StudentService {
 
         List<PartyMemberDO> toBeInsert = new ArrayList<>();
         for (StudentImportVo partyMember : partyMembers) {
-            if (existStudentNumbers.contains(partyMember.getStudentNumber())){
+            if (existStudentNumbers.contains(partyMember.getStudentNumber())) {
                 continue;
             }
             PartyMemberDO partyMemberDO = new PartyMemberDO();
@@ -400,13 +414,16 @@ public class StudentServiceImpl implements StudentService {
             partyMemberDO.setName(partyMember.getName());
             partyMemberDO.setStudentNumber(partyMember.getStudentNumber());
             partyMemberDO.setBranchId(branchMap.get(partyMember.getBranchName()));
-            partyMemberDO.setCollegeId(collegeMap.get(partyMember.getCollegeName()));
-            partyMemberDO.setGradeId(gradeMap.get(partyMember.getGradeName()));
-
+            Long collegeId = collegeMap.get(partyMember.getCollegeName());
+            String gradeKey = gradeKey(partyMember.getGradeName(), collegeId);
+            Long gradeId = gradeMap.get(gradeKey);
+            partyMemberDO.setGradeId(gradeId);
+            partyMemberDO.setCollegeId(collegeId);
             toBeInsert.add(partyMemberDO);
         }
-
-        partyMemberMapper.insertBatch(toBeInsert);
+        if (CollectionUtil.isNotEmpty(toBeInsert)) {
+            partyMemberMapper.insertBatch(toBeInsert);
+        }
     }
 
     private void insertPartyMemberData(List<StudentImportVo> partyMembers,
