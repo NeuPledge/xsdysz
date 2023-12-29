@@ -1,3 +1,9 @@
+<p align="center">
+ <img src="https://img.shields.io/badge/Spring%20Boot-2.7.18-blue.svg" alt="Downloads">
+ <img src="https://img.shields.io/badge/Vue-3.2-blue.svg" alt="Downloads">
+ <img src="https://img.shields.io/github/license/YunaiV/ruoyi-vue-pro"/>
+</p>
+
 **严肃声明：现在、未来都不会有商业版本，所有代码全部开源!！**
 
 **「我喜欢写代码，乐此不疲」**  
@@ -15,8 +21,6 @@
 * 启动文档：<https://doc.iocoder.cn/quick-start/>
 * 视频教程：<https://doc.iocoder.cn/video/>
 
-已支持 Spring Boot 3.X + JDK 17 版本，可见 [master-boot3](https://gitee.com/zhijiantianya/ruoyi-vue-pro/blob/master/README.md) 分支。
-
 ## 🐯 平台简介
 
 **芋道**，以开发者为中心，打造中国第一流的快速开发平台，全部开源，个人与企业可 100% 免费使用。
@@ -27,16 +31,18 @@
 
 ![架构图](/.image/common/ruoyi-vue-pro-architecture.png)
 
+* Java 后端：`master` 分支为 JDK 8 + Spring Boot 2.7.18，`master-jdk21` 分支为 JDK21 + Spring Boot 3.2.0
 * 管理后台的电脑端：Vue3 提供 `element-plus`、`vben(ant-design-vue)` 两个版本，Vue2 提供 `element-ui` 版本
 * 管理后台的移动端：采用 `uni-app` 方案，一份代码多终端适配，同时支持 APP、小程序、H5！
 * 后端采用 Spring Boot 多模块架构、MySQL + MyBatis Plus、Redis + Redisson
 * 数据库可使用 MySQL、Oracle、PostgreSQL、SQL Server、MariaDB、国产达梦 DM、TiDB 等
 * 消息队列可使用 Event、Redis、RabbitMQ、Kafka、RocketMQ 等
 * 权限认证使用 Spring Security & Token & Redis，支持多终端、多种用户的认证系统，支持 SSO 单点登录
-* 支持加载动态权限菜单，按钮级别权限控制，本地缓存提升性能
+* 支持加载动态权限菜单，按钮级别权限控制，Redis 缓存提升性能
 * 支持 SaaS 多租户，可自定义每个租户的权限，提供透明化的多租户底层封装
 * 工作流使用 Flowable，支持动态表单、在线设计流程、会签 / 或签、多种任务分配方式
-* 高效率开发，使用代码生成器可以一键生成前后端代码 + 单元测试 + Swagger 接口文档 + Validator 参数校验
+* 高效率开发，使用代码生成器可以一键生成 Java、Vue 前后端代码、SQL 脚本、接口文档，支持单表、树表、主子表
+* 实时通信，采用 Spring WebSocket 实现，内置 Token 身份校验，支持 WebSocket 集群
 * 集成微信小程序、微信公众号、企业微信、钉钉等三方登陆，集成支付宝、微信等支付与退款
 * 集成阿里云、腾讯云等短信渠道，集成 MinIO、阿里云、腾讯云、七牛云等云存储服务
 * 集成报表设计器、大屏设计器，通过拖拽即可生成酷炫的报表与大屏
@@ -57,28 +63,34 @@
 
 ### 前端项目
 
-| 项目                                                                         | Star                                                                                                                                                                                                                                                                                                                     | 简介                             |
-|----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------|
-| [yudao-ui-admin-vue3](https://gitee.com/yudaocode/yudao-ui-admin-vue3)     | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-admin-vue3/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-admin-vue3) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-admin-vue3.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-admin-vue3)         | 基于 Vue3 + element-plus 实现的管理后台 |
-| [yudao-ui-admin-vben](https://gitee.com/yudaocode/yudao-ui-admin-vben)     | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-admin-vben/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-admin-vben) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-admin-vben.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-admin-vben)         | 基于 Vue3 + element-plus 实现的管理后台 |
-| [yudao-mall-uniapp](https://gitee.com/yudaocode/yudao-mall-uniapp)         | [![Gitee star](https://gitee.com/yudaocode/yudao-mall-uniapp/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-mall-uniapp) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-mall-uniapp.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-mall-uniapp)                 | 基于 uni-app 实现的商城小程序            |
-| [yudao-ui-admin-vue2](https://gitee.com/yudaocode/yudao-ui-admin-vue2)     | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-admin-vue2/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-admin-vue2) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-admin-vue2.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-admin-vue2)         | 基于 Vue2 + element-ui 实现的管理后台   |
-| [yudao-ui-admin-uniapp](https://gitee.com/yudaocode/yudao-ui-admin-uniapp) | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-admin-uniapp/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-admin-uniapp) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-admin-uniapp.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-admin-uniapp) | 基于 Vue2 + element-ui 实现的管理后台   |
-| [yudao-ui-go-view](https://gitee.com/yudaocode/yudao-ui-go-view)           | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-go-view/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-go-view) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-go-view.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-go-view)                     | 基于 Vue3 + naive-ui 实现的大屏报表     |
+| 项目                                                                         | Star                                                                                                                                                                                                                                                                                                                     | 简介                                     |
+|----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------|
+| [yudao-ui-admin-vue3](https://gitee.com/yudaocode/yudao-ui-admin-vue3)     | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-admin-vue3/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-admin-vue3) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-admin-vue3.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-admin-vue3)         | 基于 Vue3 + element-plus 实现的管理后台         |
+| [yudao-ui-admin-vben](https://gitee.com/yudaocode/yudao-ui-admin-vben)     | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-admin-vben/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-admin-vben) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-admin-vben.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-admin-vben)         | 基于 Vue3 + vben(ant-design-vue) 实现的管理后台 |
+| [yudao-mall-uniapp](https://gitee.com/yudaocode/yudao-mall-uniapp)         | [![Gitee star](https://gitee.com/yudaocode/yudao-mall-uniapp/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-mall-uniapp) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-mall-uniapp.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-mall-uniapp)                 | 基于 uni-app 实现的商城小程序                    |
+| [yudao-ui-admin-vue2](https://gitee.com/yudaocode/yudao-ui-admin-vue2)     | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-admin-vue2/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-admin-vue2) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-admin-vue2.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-admin-vue2)         | 基于 Vue2 + element-ui 实现的管理后台           |
+| [yudao-ui-admin-uniapp](https://gitee.com/yudaocode/yudao-ui-admin-uniapp) | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-admin-uniapp/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-admin-uniapp) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-admin-uniapp.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-admin-uniapp) | 基于 Vue2 + element-ui 实现的管理后台           |
+| [yudao-ui-go-view](https://gitee.com/yudaocode/yudao-ui-go-view)           | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-go-view/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-go-view) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-go-view.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-go-view)                     | 基于 Vue3 + naive-ui 实现的大屏报表             |
 
 ## 🐰 分支说明
 
-|       | JDK 8 完整版                                                 | JDK 8 精简版                                                          | JDK 17 完整版                                                                  |
-|-------|-----------------------------------------------------------|--------------------------------------------------------------------|-----------------------------------------------------------------------------|
-| 分支    | [`master`](https://gitee.com/zhijiantianya/ruoyi-vue-pro) | [`mini`](https://gitee.com/zhijiantianya/ruoyi-vue-pro/tree/mini/) | [`master-boot3`](https://gitee.com/zhijiantianya/ruoyi-vue-pro/tree/master-boot3/) |
-| 说明    | 包括所有功能                                                    | 只保留核心功能                                                            | 适配 Spring Boot 3.X                                                          |
-| 系统功能  | √                                                         | √                                                                  | √                                                                           |
-| 基础设施  | √                                                         | √                                                                  | √                                                                           |
-| 会员中心  | √                                                         | √                                                                  | √                                                                           |
-| 工作流程  | √                                                         | x                                                                  | √                                                                         |
-| 数据报表  | √                                                         | x                                                                  | 适配中                                                                         |
-| 商城系统  | √                                                         | x                                                                  | √                                                                           |
-| 微信公众号 | √                                                         | x                                                                  | √                                                                           |
+### ⬅️ 完整版
+
+【完整版】包括系统功能、基础设施、会员中心、数据报表、工作流程、商城系统、微信公众号、CRM 等功能
+
+* JDK 8 + Spring Boot 2.7.18 版本：<https://gitee.com/zhijiantianya/ruoyi-vue-pro> 的 `master` 分支
+* JDK 21 + Spring Boot 3.2.0 版本：<https://gitee.com/zhijiantianya/ruoyi-vue-pro> 的 `master-jdk21` 分支
+
+两个分支的功能是一致的，可以放心使用！
+
+### ➡️️ 精简版
+
+【精简版】只包括系统功能、基础设施功能，不包括会员中心、数据报表、工作流程、商城系统、微信公众号、CRM 等功能
+
+* JDK 8 + Spring Boot 2.7.18 版本：<https://gitee.com/yudaocode/yudao-boot-mini> 的 `master` 分支
+* JDK 21 + Spring Boot 3.2.0 版本：<https://gitee.com/yudaocode/yudao-boot-mini> 的 `master-jdk21` 分支
+
+如果你想把【完整版】的功能，迁移到【精简版】，可以参考 [《迁移功能到精简版》](https://doc.iocoder.cn/migrate-module/) 文档。
 
 ## 😎 开源协议
 
@@ -90,7 +102,7 @@
 
 ![开源项目对比](/.image/common/project-vs.png)
 
-③ 代码整洁、架构整洁，遵循《阿里巴巴 Java 开发手册》规范，代码注释详细，57000 行 Java 代码，22000 行代码注释。
+③ 代码整洁、架构整洁，遵循《阿里巴巴 Java 开发手册》规范，代码注释详细，113770 行 Java 代码，42462 行代码注释。
 
 ## 🤝 项目外包
 
@@ -170,27 +182,28 @@
 
 ### 基础设施
 
-|     | 功能       | 描述                                           |
-|-----|----------|----------------------------------------------|
-| 🚀  | 代码生成     | 前后端代码的生成（Java、Vue、SQL、单元测试），支持 CRUD 下载       |
-| 🚀  | 系统接口     | 基于 Swagger 自动生成相关的 RESTful API 接口文档          |
-| 🚀  | 数据库文档    | 基于 Screw 自动生成数据库文档，支持导出 Word、HTML、MD 格式      |
-|     | 表单构建     | 拖动表单元素生成相应的 HTML 代码，支持导出 JSON、Vue 文件         |
-| 🚀  | 配置管理     | 对系统动态配置常用参数，支持 SpringBoot 加载                 |
-| ⭐️  | 定时任务     | 在线（添加、修改、删除)任务调度包含执行结果日志                     |
-| 🚀  | 文件服务     | 支持将文件存储到 S3（MinIO、阿里云、腾讯云、七牛云）、本地、FTP、数据库等   | 
-| 🚀  | API 日志   | 包括 RESTful API 访问日志、异常日志两部分，方便排查 API 相关的问题   |
-|     | MySQL 监控 | 监视当前系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈              |
-|     | Redis 监控 | 监控 Redis 数据库的使用情况，使用的 Redis Key 管理           |
-| 🚀  | 消息队列     | 基于 Redis 实现消息队列，Stream 提供集群消费，Pub/Sub 提供广播消费 |
-| 🚀  | Java 监控  | 基于 Spring Boot Admin 实现 Java 应用的监控           |
-| 🚀  | 链路追踪     | 接入 SkyWalking 组件，实现链路追踪                      |
-| 🚀  | 日志中心     | 接入 SkyWalking 组件，实现日志中心                      |
-| 🚀  | 分布式锁     | 基于 Redis 实现分布式锁，满足并发场景                       |
-| 🚀  | 幂等组件     | 基于 Redis 实现幂等组件，解决重复请求问题                     |
-| 🚀  | 服务保障     | 基于 Resilience4j 实现服务的稳定性，包括限流、熔断等功能          |
-| 🚀  | 日志服务     | 轻量级日志中心，查看远程服务器的日志                           |
-| 🚀  | 单元测试     | 基于 JUnit + Mockito 实现单元测试，保证功能的正确性、代码的质量等    |
+|     | 功能        | 描述                                           |
+|-----|-----------|----------------------------------------------|
+| 🚀  | 代码生成      | 前后端代码的生成（Java、Vue、SQL、单元测试），支持 CRUD 下载       |
+| 🚀  | 系统接口      | 基于 Swagger 自动生成相关的 RESTful API 接口文档          |
+| 🚀  | 数据库文档     | 基于 Screw 自动生成数据库文档，支持导出 Word、HTML、MD 格式      |
+|     | 表单构建      | 拖动表单元素生成相应的 HTML 代码，支持导出 JSON、Vue 文件         |
+| 🚀  | 配置管理      | 对系统动态配置常用参数，支持 SpringBoot 加载                 |
+| ⭐️  | 定时任务      | 在线（添加、修改、删除)任务调度包含执行结果日志                     |
+| 🚀  | 文件服务      | 支持将文件存储到 S3（MinIO、阿里云、腾讯云、七牛云）、本地、FTP、数据库等   | 
+| 🚀  | WebSocket | 提供 WebSocket 接入示例，支持一对一、一对多发送方式              | 
+| 🚀  | API 日志    | 包括 RESTful API 访问日志、异常日志两部分，方便排查 API 相关的问题   |
+|     | MySQL 监控  | 监视当前系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈              |
+|     | Redis 监控  | 监控 Redis 数据库的使用情况，使用的 Redis Key 管理           |
+| 🚀  | 消息队列      | 基于 Redis 实现消息队列，Stream 提供集群消费，Pub/Sub 提供广播消费 |
+| 🚀  | Java 监控   | 基于 Spring Boot Admin 实现 Java 应用的监控           |
+| 🚀  | 链路追踪      | 接入 SkyWalking 组件，实现链路追踪                      |
+| 🚀  | 日志中心      | 接入 SkyWalking 组件，实现日志中心                      |
+| 🚀  | 分布式锁      | 基于 Redis 实现分布式锁，满足并发场景                       |
+| 🚀  | 幂等组件      | 基于 Redis 实现幂等组件，解决重复请求问题                     |
+| 🚀  | 服务保障      | 基于 Resilience4j 实现服务的稳定性，包括限流、熔断等功能          |
+| 🚀  | 日志服务      | 轻量级日志中心，查看远程服务器的日志                           |
+| 🚀  | 单元测试      | 基于 JUnit + Mockito 实现单元测试，保证功能的正确性、代码的质量等    |
 
 ### 数据报表
 
