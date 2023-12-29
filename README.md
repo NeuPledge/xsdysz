@@ -338,3 +338,8 @@ _前端基于 crmeb uniapp 经过授权重构，优化代码实现，接入芋�
 | ![](/.image/admin-uniapp/07.png) | ![](/.image/admin-uniapp/08.png) | ![](/.image/admin-uniapp/09.png) |
 
 目前已经实现登录、我的、工作台、编辑资料、头像修改、密码修改、常见问题、关于我们等基础功能。
+
+docker tag mysql:8 simuhunluo/mysql:8
+docker tag redis:6-alpine simuhunluo/redis:6-alpine
+
+
