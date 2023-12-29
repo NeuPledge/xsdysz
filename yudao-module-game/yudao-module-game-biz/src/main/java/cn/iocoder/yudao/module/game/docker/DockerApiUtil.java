@@ -1,6 +1,6 @@
 package cn.iocoder.yudao.module.game.docker;
 
-import com.alibaba.fastjson.JSON;
+import cn.iocoder.yudao.framework.common.util.json.JsonUtils;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.DockerCmdExecFactory;
 import com.github.dockerjava.api.command.ListImagesCmd;
@@ -41,7 +41,7 @@ public class DockerApiUtil {
 
         List<Container> containers = dockerClient.listContainersCmd().exec();
 
-        log.info(JSON.toJSONString(containers, true));
+        log.info(JsonUtils.toJsonPrettyString(containers));
     }
 
 }
