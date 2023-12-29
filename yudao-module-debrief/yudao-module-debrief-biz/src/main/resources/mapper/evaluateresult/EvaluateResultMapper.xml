@@ -30,10 +30,10 @@
     <!--  近30日每日测评票数  -->
     <select id="commentTrend" resultType="cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.dto.CommentTrendDto">
         select
-            date(create_time) as `day`, comment, count(distinct party_member_id) as `num`
+            date(create_time) as `day`, comment, count(1) as `num`
         from
             debrief_evaluate_result
-        where create_time >= CURDATE() - INTERVAL 29 day and create_time &lt;= CURDATE() + INTERVAL 1 day
+        where create_time >= #{startDate} and create_time &lt;= CURDATE() + INTERVAL 1 day
         group by date(create_time), comment
         order by `day` asc
     </select>
@@ -178,7 +178,7 @@
         case when comment=1 or comment=2 then 1 else 0 end as c12,
         case when comment=3 then 1 else 0 end as c3
         from debrief_evaluate_result
-        where `college_id` = 41
+        where `college_id` = #{collegeId}
         group by party_member_id, comment order by party_member_id asc) subq
         left join debrief_party_member dpm on dpm.id = subq.party_member_id
         group by party_member_id
@@ -192,7 +192,7 @@
         select
         case length(student_number) when 8 then 'benke' else 'yanjiusheng' end as stype
         from (select distinct party_member_id,dpm.student_number  from debrief_evaluate_result der left join  debrief_party_member dpm on dpm.id = der.party_member_id
-        where der.`college_id` = 41) subq
+        where der.`college_id` = #{collegeId}) subq
         ) subq
         group by stype
         ) b
