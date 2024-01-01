@@ -26,9 +26,9 @@ public class BannerApplicationRunner implements ApplicationRunner {
                             "开发文档: \t{} \n\t" +
                             "视频教程: \t{} \n" +
                             "----------------------------------------------------------",
-                    "https://doc.iocoder.cn/api-doc/",
-                    "https://doc.iocoder.cn",
-                    "https://t.zsxq.com/02Yf6M7Qn");
+                    "http://localhost:48080/doc.html",
+                    "http://localhost:48080/doc.html",
+                    "http://localhost:48080/doc.html");
 
             // 数据报表
             if (isNotPresent("cn.iocoder.yudao.module.report.framework.security.config.SecurityConfiguration")) {

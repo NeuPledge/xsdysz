@@ -8,7 +8,7 @@
         代码生成器暂时只生成 Mapper XML 文件本身，更多推荐 MybatisX 快速开发插件来生成查询。
         文档可见：https://www.iocoder.cn/MyBatis/x-plugins/
      -->
-    <sql id="Base_Column_List">
+    <sql id="Base_Column_List2">
         id, debrief_student_id, name, student_number, branch_id, college_id, grade_id, satisfaction,
     base_satisfaction, dissatisfaction, modify_time
     </sql>
@@ -21,7 +21,7 @@
 
     <select id="selectUnequalGradeId" resultType="cn.iocoder.yudao.module.debrief.dal.dataobject.partymember.PartyMemberDO">
         SELECT
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List2"/>
         FROM `debrief_party_member`
         where grade_id != #{gradeId,jdbcType=BIGINT}
         ORDER BY RAND() LIMIT #{size,jdbcType=BIGINT};
