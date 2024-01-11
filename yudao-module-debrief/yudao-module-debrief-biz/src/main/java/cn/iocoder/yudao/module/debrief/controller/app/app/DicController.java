@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.debrief.controller.app.app;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.module.debrief.controller.app.response.DicCollegeResponse;
 import cn.iocoder.yudao.module.debrief.controller.app.response.DicCollegeWithListResponse;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
@@ -45,6 +48,8 @@ public class DicController {
     public CommonResult getGrades(
             @RequestParam(value = "college_id") Long collegeId) {
         List<DicGradeResponse> grades = dicService.getGrades(collegeId);
+        grades = grades.stream().sorted(Comparator.comparing(DicGradeResponse::getGradeName)).collect(Collectors.toList());
+
         DicGradeWithListResponse dicGradeWithListResponse = new DicGradeWithListResponse();
         dicGradeWithListResponse.setGrades(grades);
         List<String> gradeNames = new ArrayList<>();
