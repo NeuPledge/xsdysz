@@ -45,7 +45,7 @@
                      (select distinct id from debrief_student where id not in
                                                                     (select distinct commenter_id from debrief_evaluate_result)
                      ) b) order by college_id asc) t1 left join debrief_dic_college c on t1.college_id = c.id)
-        where t1.college_id = 1
+        where t1.college_id = #{collegeId}
     </select>
 
     <!--  学院测评进度  -->

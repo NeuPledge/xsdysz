@@ -44,6 +44,7 @@ public class LoginServiceImpl implements LoginService {
         StudentDO result = studentMapper.selectOne(
                 new LambdaQueryWrapperX<StudentDO>()
                         .eq(StudentDO::getCollegeId, student.getCollegeId())
+                        .eq(StudentDO::getGradeId, student.getGradeId())
                         .eq(StudentDO::getName, student.getName())
                         .eq(StudentDO::getStudentNumber, student.getStudentNumber())
         );
