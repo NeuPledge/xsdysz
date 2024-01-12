@@ -223,6 +223,9 @@ public class EvaluateResultServiceImpl implements EvaluateResultService {
             if (progress.getNum() >= progress.getTotal()) {
                 finishCount++;
             }
+            if (progress.getNum() == 0) {
+                continue;
+            }
             if (i <= 20) {
                 list.add(progress);
             }
@@ -250,6 +253,9 @@ public class EvaluateResultServiceImpl implements EvaluateResultService {
         for (GradeProgressDto progress : progressDtos) {
             if (progress.getNum() >= progress.getTotal()) {
                 finishCount++;
+            }
+            if (progress.getNum() == 0) {
+                continue;
             }
             if (i <= 40) {
                 list.add(progress);
