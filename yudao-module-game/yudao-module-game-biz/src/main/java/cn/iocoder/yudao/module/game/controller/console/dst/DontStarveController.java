@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.game.controller.console.dst;
 
 
+import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.iocoder.yudao.module.game.common.ResultData;
 import cn.iocoder.yudao.module.game.common.enums.dst.DstEmoji;
 import cn.iocoder.yudao.module.game.common.enums.dst.GameMode;
@@ -11,13 +12,10 @@ import cn.iocoder.yudao.module.game.common.params.PlayManageParam;
 import cn.iocoder.yudao.module.game.common.params.UpdatePlayerFileParams;
 import cn.iocoder.yudao.module.game.common.params.WorldLevelOverrideParam;
 import cn.iocoder.yudao.module.game.common.response.*;
-import com.dooyo.dao.MBTBlockModDao;
-import com.dooyo.dao.MBTDicDao;
-import com.dooyo.dao.entity.MBTBlockModEntity;
-import com.dooyo.dao.entity.MBTBlockModEntityExample;
-import com.dooyo.dao.entity.MBTBlockModEntityExample.Criteria;
-import com.dooyo.service.ICommonService;
-import com.dooyo.service.IDstService;
+import cn.iocoder.yudao.module.game.dal.dataobject.dstblockmod.DstBlockModDO;
+import cn.iocoder.yudao.module.game.dal.mysql.dstblockmod.DstBlockModMapper;
+import cn.iocoder.yudao.module.game.service.console.dst.ICommonService;
+import cn.iocoder.yudao.module.game.service.console.dst.IDstService;
 import cn.iocoder.yudao.module.game.service.console.clients.dst.model.ArchiveFileInfo;
 import cn.iocoder.yudao.module.game.service.console.clients.dst.model.LevelConfig;
 import cn.iocoder.yudao.module.game.service.console.clients.dst.model.LocalModInfo;
@@ -43,20 +41,20 @@ import java.util.Objects;
 @Slf4j
 @RestController
 @Tag(name = "集群设置(房间设置)")
-@RequestMapping(value = "/dst")
+@RequestMapping("/console/dst")
 public class DontStarveController {
 
     @Autowired
     IDstService dstService;
 
     @Autowired
-    MBTBlockModDao blockModDao;
+    DstBlockModMapper blockModDao;
 
     @Autowired
     ICommonService commonService;
 
-    @Autowired
-    MBTDicDao dicDao;
+//    @Autowired
+//    MBTDicDao dicDao;
 
     @Operation(summary = "获取房间信息(名称/模式/进度/直连代码/饥荒版本)")
     @GetMapping("/get-worldinfo")
@@ -119,8 +117,8 @@ public class DontStarveController {
     @Operation(summary = "获取日志")
     @GetMapping("/cluster/logs")
     public ResultData getLogs(
-        @RequestParam LogType logType,
-        @RequestParam Integer line) {
+            @RequestParam LogType logType,
+            @RequestParam Integer line) {
         String logContent = dstService.getLogs(logType, line);
         return ResultData.withDataSuccessNoEncrypt(logContent);
     }
@@ -202,10 +200,8 @@ public class DontStarveController {
     @Operation(summary = "检查模组是否在黑名单中", description = "")
     @GetMapping("/check-block-mod")
     public ResultData checkBlockMod(@RequestParam(required = true) String modId) {
-        MBTBlockModEntityExample example = new MBTBlockModEntityExample();
-        Criteria criteria = example.createCriteria();
-        criteria.andModIdEqualTo(Long.parseLong(modId));
-        MBTBlockModEntity mbtBlockModEntity = blockModDao.selectOneByExample(example);
+        DstBlockModDO mbtBlockModEntity = blockModDao.selectOne(new LambdaQueryWrapperX<DstBlockModDO>().eq(DstBlockModDO::getModId, Long.parseLong(modId)).last("limit 1"));
+
         BlockModResponse response = new BlockModResponse();
         response.setStatus(null);
         if (mbtBlockModEntity != null) {

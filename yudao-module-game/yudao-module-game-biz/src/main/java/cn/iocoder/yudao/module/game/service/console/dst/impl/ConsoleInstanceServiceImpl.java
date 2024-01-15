@@ -70,7 +70,7 @@ import static cn.iocoder.yudao.module.game.common.params.manage.InstanceQueryPar
 
 @Slf4j
 @Service
-public class InstanceServiceImpl implements IInstanceService {
+public class ConsoleInstanceServiceImpl implements IInstanceService {
 
     @Autowired
     InstanceMapper instanceDao;
@@ -813,7 +813,7 @@ public class InstanceServiceImpl implements IInstanceService {
     }
 
     public static void main(String[] args) {
-        InstanceServiceImpl instanceService = new InstanceServiceImpl();
+        ConsoleInstanceServiceImpl instanceService = new ConsoleInstanceServiceImpl();
         InstanceDO instance = new InstanceDO();
         instance.setIp("h1.pandacloudgame.com");
         instance.setSshPort(20001);

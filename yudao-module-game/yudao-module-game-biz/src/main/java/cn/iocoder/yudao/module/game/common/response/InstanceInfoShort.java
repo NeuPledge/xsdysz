@@ -1,6 +1,6 @@
 package cn.iocoder.yudao.module.game.common.response;
 
-import com.dooyo.dao.entity.MBTInstanceEntity;
+import cn.iocoder.yudao.module.game.dal.dataobject.instance.InstanceDO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class InstanceInfoShort extends MBTInstanceEntity {
+public class InstanceInfoShort extends InstanceDO {
 
     @Schema(description = "是否推荐到当前套餐选项. 根据已选的套餐, 判断内存,带宽等参数是否匹配")
     private Boolean isPackageRecommend;

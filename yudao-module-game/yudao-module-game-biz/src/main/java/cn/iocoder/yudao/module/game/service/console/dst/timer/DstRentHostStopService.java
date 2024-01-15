@@ -1,26 +1,13 @@
 package cn.iocoder.yudao.module.game.service.console.dst.timer;
 
 
-import cn.iocoder.yudao.module.game.common.params.manage.InstanceQueryParam;
-import cn.iocoder.yudao.module.game.common.response.InstanceInfo;
-import com.dooyo.service.IInstanceService;
-import com.dooyo.service.clients.dst.DstClient;
-import cn.iocoder.yudao.module.game.service.console.clients.dst.model.WorldStatus;
-import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import static cn.iocoder.yudao.module.game.common.params.manage.InstanceQueryParam.State.IDLE;
 
 @Slf4j
 @Service
 public class DstRentHostStopService {
-
+/*
     @Resource
     IInstanceService instanceService;
 
@@ -60,6 +47,6 @@ public class DstRentHostStopService {
             }
         }
 
-    }
+    }*/
 
 }

@@ -1,7 +1,7 @@
 package cn.iocoder.yudao.server;
 
-import cn.hutool.extra.spring.SpringUtil;
-import cn.iocoder.yudao.module.debrief.config.ApplicationConfig;
+//import cn.hutool.extra.spring.SpringUtil;
+//import cn.iocoder.yudao.module.debrief.config.ApplicationConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -25,7 +25,7 @@ public class YudaoServerApplication {
 
         SpringApplication.run(YudaoServerApplication.class, args);
 
-        SpringUtil.getBean(ApplicationConfig.class).check();
+//        SpringUtil.getBean(ApplicationConfig.class).check();
 
 
 

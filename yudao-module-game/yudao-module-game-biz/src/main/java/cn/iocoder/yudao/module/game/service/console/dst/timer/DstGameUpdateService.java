@@ -1,19 +1,20 @@
 package cn.iocoder.yudao.module.game.service.console.dst.timer;
 
+import cn.iocoder.yudao.module.game.dal.dataobject.instance.InstanceDO;
+import cn.iocoder.yudao.module.game.dal.mysql.instance.InstanceMapper;
+import cn.iocoder.yudao.module.game.service.console.clients.dst.DstClient;
+import cn.iocoder.yudao.module.game.service.console.dst.IInstanceService;
+import cn.iocoder.yudao.module.game.util.OKHttpUtil;
+import cn.iocoder.yudao.module.system.api.dict.DictDataApi;
+import cn.iocoder.yudao.module.system.api.dict.dto.DictDataRespDTO;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.dooyo.dao.MBTDicDao;
-import com.dooyo.dao.MBTInstanceDao;
-import com.dooyo.dao.entity.MBTDicEntity;
-import com.dooyo.dao.entity.MBTDicEntityExample;
-import com.dooyo.dao.entity.MBTInstanceEntity;
-import com.dooyo.service.IInstanceService;
-import com.dooyo.service.clients.dst.DstClient;
-import cn.iocoder.yudao.module.game.util.OKHttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 @Slf4j
 @Service
@@ -24,10 +25,13 @@ public class DstGameUpdateService {
     IInstanceService instanceService;
 
     @Autowired
-    MBTInstanceDao instanceDao;
+    InstanceMapper instanceDao;
 
-    @Autowired
-    MBTDicDao dicDao;
+    @Resource
+    DictDataApi dictDataApi;
+
+//    @Autowired
+//    MBTDicDao dicDao;
 
     public void run() {
         // 更新
@@ -51,19 +55,14 @@ public class DstGameUpdateService {
             if (jsonObject != null) {
                 Integer version = jsonObject.getInteger("version");
                 if (version != null && version > 0) {
-                    MBTDicEntityExample dicEntityExample = new MBTDicEntityExample();
-                    MBTDicEntityExample.Criteria dicEntityExampleCriteria = dicEntityExample.createCriteria();
-                    dicEntityExampleCriteria.andTypeEqualTo("dst_latest_version");
-                    dicEntityExampleCriteria.andKeyEqualTo("dst_latest_version");
-                    MBTDicEntity mbtDic = dicDao.selectOneByExample(dicEntityExample);
-                    String latestVersion = mbtDic.getValue();
-
+                    DictDataRespDTO dictDataRespDTO = dictDataApi.parseDictData("dst_latest_version", "dst_latest_version");
+                    String latestVersion = dictDataRespDTO.getValue();
                     int dbVersion = Integer.parseInt(latestVersion);
 
                     if (version > dbVersion) {
                         log.info("检测到饥荒有更新, 当前版本{}, 最新版本{}, 需要更新", dbVersion, version);
-                        mbtDic.setValue(String.valueOf(version));
-                        dicDao.updateByPrimaryKeySelective(mbtDic, MBTDicEntity.Column.value);
+//                        mbtDic.setValue(String.valueOf(version));
+//                        dicDao.updateByPrimaryKeySelective(mbtDic, MBTDicEntity.Column.value);
                         run();
                     } else {
                         log.info("从第三方网站查询饥荒最新版本, 当前版本{}, 最新版本{}, 无需更新", dbVersion, version);
@@ -79,13 +78,11 @@ public class DstGameUpdateService {
      * 定时更新我们自己的那台服务器的饥荒版本. 如果有更新, 则触发全局更新.
      */
     public void updateSelfDstVersion() {
-        MBTDicEntityExample example = new MBTDicEntityExample();
-        MBTDicEntityExample.Criteria criteria = example.createCriteria();
-        criteria.andTypeEqualTo("dst_host_check_version_instid");
-        criteria.andKeyEqualTo("dst_host_check_version_instid");
-        MBTDicEntity mbtDic = dicDao.selectOneByExample(example);
-        String instanceId = mbtDic.getValue();
-        MBTInstanceEntity instance = instanceDao.selectByPrimaryKey(Long.parseLong(instanceId));
+
+        DictDataRespDTO dictDataRespDTO = dictDataApi.parseDictData("dst_host_check_version_instid", "dst_host_check_version_instid");
+        String instanceId = dictDataRespDTO.getValue();
+
+        InstanceDO instance = instanceDao.selectById(Long.parseLong(instanceId));
         DstClient.getInstance().updateGame(instance);
 
 
@@ -101,23 +98,20 @@ public class DstGameUpdateService {
         if (StringUtils.isNotEmpty(version) && StringUtils.isNotEmpty(version.trim())) {
             int curLatestVersionValue = Integer.parseInt(version);
 
-            MBTDicEntityExample dicEntityExample = new MBTDicEntityExample();
-            MBTDicEntityExample.Criteria dicEntityExampleCriteria = dicEntityExample.createCriteria();
-            dicEntityExampleCriteria.andTypeEqualTo("dst_latest_version");
-            dicEntityExampleCriteria.andKeyEqualTo("dst_latest_version");
-            MBTDicEntity latestVersionEntity = dicDao.selectOneByExample(dicEntityExample);
-            String preLatestVersion = latestVersionEntity.getValue();
+            DictDataRespDTO lastVersionDto = dictDataApi.parseDictData("dst_latest_version", "dst_latest_version");
+            String preLatestVersion = lastVersionDto.getValue();
+
             int preLatestVersionValue = Integer.parseInt(preLatestVersion);
 
             if (preLatestVersionValue > 0 && curLatestVersionValue > preLatestVersionValue) {
                 log.info("检测到饥荒有更新, 当前版本{}, 最新版本{}, 需要更新", preLatestVersionValue, curLatestVersionValue);
-                mbtDic.setValue(version);
-                dicDao.updateByPrimaryKeySelective(mbtDic, MBTDicEntity.Column.value);
+//                mbtDic.setValue(version);
+//                dicDao.updateByPrimaryKeySelective(mbtDic, MBTDicEntity.Column.value);
 
-                MBTInstanceEntity record = new MBTInstanceEntity();
-                record.setId(instance.getId());
-                record.setDstGameVersion(version);
-                instanceDao.updateByPrimaryKeySelective(record, MBTInstanceEntity.Column.dstGameVersion);
+//                MBTInstanceEntity record = new MBTInstanceEntity();
+                instance.setId(instance.getId());
+                instance.setGameVersionDst(version);
+                instanceDao.updateById(instance);
             }
         }
         // 更新全部的机器.

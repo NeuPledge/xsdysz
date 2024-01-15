@@ -2,17 +2,16 @@ package cn.iocoder.yudao.module.game.service.console.dst.timer;
 
 
 import cn.hutool.core.date.StopWatch;
-import com.dooyo.dao.MBTInstanceDao;
-import com.dooyo.dao.entity.MBTInstanceEntity;
-import com.dooyo.dao.entity.MBTInstanceEntity.Column;
-import com.dooyo.dao.entity.MBTInstanceEntityExample;
-import com.dooyo.dao.entity.MBTInstanceEntityExample.Criteria;
+import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
+import cn.iocoder.yudao.module.game.dal.dataobject.instance.InstanceDO;
+import cn.iocoder.yudao.module.game.dal.mysql.instance.InstanceMapper;
 import cn.iocoder.yudao.module.game.util.Shell;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -27,24 +26,18 @@ import java.util.concurrent.TimeUnit;
 public class DiskSlimService {
 
     @Autowired
-    MBTInstanceDao instanceDao;
+    InstanceMapper instanceDao;
 
     public void run() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start("磁盘检测并瘦身");
 
-        MBTInstanceEntityExample example = new MBTInstanceEntityExample();
-        Criteria criteria = example.createCriteria();
-        criteria.andAgentCodeEqualTo("dst");
-        criteria.andDstAgentStatusEqualTo("up");
-        criteria.andEndTimeGreaterThan(new Date());
-
-        List<MBTInstanceEntity> mbtInstanceEntities = instanceDao.selectByExample(example);
+        List<InstanceDO> mbtInstanceEntities = instanceDao.selectList(new LambdaQueryWrapperX<InstanceDO>().eq(InstanceDO::getAgentStatus, "up").gt(InstanceDO::getEndTime, LocalDateTime.now()));
 
         CountDownLatch countDownLatch = new CountDownLatch(mbtInstanceEntities.size());
         ExecutorService executor = new ThreadPoolExecutor(30, 30, 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(1), Executors.defaultThreadFactory(), new ThreadPoolExecutor.CallerRunsPolicy());
 
-        for (MBTInstanceEntity mbtInstanceEntity : mbtInstanceEntities) {
+        for (InstanceDO mbtInstanceEntity : mbtInstanceEntities) {
             executor.submit(new Runnable() {
                 @Override
                 public void run() {
@@ -67,11 +60,11 @@ public class DiskSlimService {
                             String diskFreePercentStr = items[4];
                             int disk = Integer.parseInt(diskStr.replace("G", ""));
                             int diskFreePercent = Integer.parseInt(diskFreePercentStr.replace("%", ""));
-                            MBTInstanceEntity instance = new MBTInstanceEntity();
-                            instance.setDisk(disk);
-                            instance.setDiskUsedPercent(diskFreePercent);
-                            instance.setId(mbtInstanceEntity.getId());
-                            instanceDao.updateByPrimaryKeySelective(instance, Column.disk, Column.diskUsedPercent);
+//                            InstanceDO instance = new InstanceDO();
+                            mbtInstanceEntity.setDisk(disk);
+                            mbtInstanceEntity.setDiskUsedPercent(diskFreePercent);
+                            mbtInstanceEntity.setId(mbtInstanceEntity.getId());
+                            instanceDao.updateById(mbtInstanceEntity);
                         }
                     } catch (Exception ignore) {
                         log.error("获取磁盘容量失败, 机器id:{}, ip:{}", mbtInstanceEntity.getId(), mbtInstanceEntity.getIp());

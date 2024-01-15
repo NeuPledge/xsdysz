@@ -1,19 +1,13 @@
 package cn.iocoder.yudao.module.game.service.console.dst;
 
-import cn.iocoder.yudao.module.game.dal.dataobject.operatelog.GameOperateLogDO;
 import cn.iocoder.yudao.module.game.common.params.LoginParam;
 import cn.iocoder.yudao.module.game.common.params.PasswordParam;
 import cn.iocoder.yudao.module.game.common.params.manage.RentBundleParam;
-import cn.iocoder.yudao.module.game.common.params.manage.UserListParam;
 import cn.iocoder.yudao.module.game.common.params.manage.UserParam;
-import cn.iocoder.yudao.module.game.common.params.manage.UserRentListParam;
 import cn.iocoder.yudao.module.game.common.response.LoginResponse;
 import cn.iocoder.yudao.module.game.common.response.RentInfo;
+import cn.iocoder.yudao.module.game.dal.dataobject.operatelog.GameOperateLogDO;
 import cn.iocoder.yudao.module.game.dal.dataobject.player.PlayerDO;
-import com.dooyo.dao.entity.MBTDstPlayerEntity;
-import com.dooyo.dao.entity.MBTOperateLogEntity;
-import com.dooyo.dao.entity.MBTUserEntity;
-import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -43,7 +37,7 @@ public interface IUserService {
     /**
      * 列出当前的用户.
      */
-    PageInfo listUsers(UserListParam param);
+//    PageInfo listUsers(UserListParam param);
 
     /**
      * 编辑/更新账号租约信息.
@@ -55,7 +49,7 @@ public interface IUserService {
      *
      * @return 简短的用户信息.
      */
-    List<MBTUserEntity> listUsersForAutodcomplete();
+//    List<MBTUserEntity> listUsersForAutodcomplete();
 
     /**
      * 新增账号绑定租约.
@@ -91,7 +85,7 @@ public interface IUserService {
      *
      * @param param 查询参数.
      */
-    PageInfo listUserRents(UserRentListParam param);
+//    PageInfo listUserRents(UserRentListParam param);
 
     void deleteUserAccount(Long userId);
 

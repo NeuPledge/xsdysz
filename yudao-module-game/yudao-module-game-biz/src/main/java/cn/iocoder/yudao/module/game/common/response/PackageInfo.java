@@ -1,6 +1,6 @@
 package cn.iocoder.yudao.module.game.common.response;
 
-import com.dooyo.dao.entity.MBTDstPackageEntity;
+import cn.iocoder.yudao.module.game.dal.dataobject.gamepackage.PackageDO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 
 @Data
-public class PackageInfo extends MBTDstPackageEntity {
+public class PackageInfo extends PackageDO {
     @Schema(description = "套餐对应的价格")
     private Double price;
 
@@ -27,15 +27,13 @@ public class PackageInfo extends MBTDstPackageEntity {
         priceMap.put(10L, 148D);
     }
 
-    public PackageInfo(MBTDstPackageEntity entity) {
+    public PackageInfo(PackageDO entity) {
         this.setId(entity.getId());
         this.setName(entity.getName());
         this.setPlayer(entity.getPlayer());
         this.setCpu(entity.getCpu());
         this.setMemoryMax(entity.getMemoryMax());
         this.setMemoryMin(entity.getMemoryMin());
-        this.setBandwidthMax(entity.getBandwidthMax());
-        this.setBandwidthMin(entity.getBandwidthMin());
         this.setCpuHzMin(entity.getCpuHzMin());
         this.setCpuHzMax(entity.getCpuHzMax());
         this.setCreateTime(entity.getCreateTime());

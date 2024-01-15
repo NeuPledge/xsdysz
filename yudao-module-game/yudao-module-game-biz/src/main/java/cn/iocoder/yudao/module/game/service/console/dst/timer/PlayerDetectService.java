@@ -1,16 +1,15 @@
 package cn.iocoder.yudao.module.game.service.console.dst.timer;
 
 import cn.hutool.core.date.StopWatch;
-import com.dooyo.dao.MBTDstPlayerDao;
-import com.dooyo.dao.MBTInstanceDao;
-import com.dooyo.dao.MBTUserRentDao;
-import com.dooyo.dao.entity.MBTDstPlayerEntity;
-import com.dooyo.dao.entity.MBTDstPlayerEntityExample;
-import com.dooyo.dao.entity.MBTInstanceEntity;
-import com.dooyo.dao.entity.MBTUserRentEntity;
-import com.dooyo.dao.entity.MBTUserRentEntityExample;
-import com.dooyo.dao.entity.MBTUserRentEntityExample.Criteria;
-import com.dooyo.service.clients.dst.DstClient;
+import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
+import cn.iocoder.yudao.module.game.dal.dataobject.instance.InstanceDO;
+import cn.iocoder.yudao.module.game.dal.dataobject.player.PlayerDO;
+import cn.iocoder.yudao.module.game.dal.dataobject.rent.RentDO;
+import cn.iocoder.yudao.module.game.dal.mysql.instance.InstanceMapper;
+import cn.iocoder.yudao.module.game.dal.mysql.player.PlayerMapper;
+import cn.iocoder.yudao.module.game.dal.mysql.rent.RentMapper;
+
+import cn.iocoder.yudao.module.game.service.console.clients.dst.DstClient;
 import cn.iocoder.yudao.module.game.service.console.clients.dst.model.Player;
 import cn.iocoder.yudao.module.game.service.console.clients.dst.model.WorldInfo;
 import cn.iocoder.yudao.module.game.util.DateFormatUtil;
@@ -18,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -33,13 +33,13 @@ import java.util.concurrent.TimeUnit;
 public class PlayerDetectService {
 
     @Autowired
-    MBTInstanceDao instanceDao;
+    InstanceMapper instanceDao;
 
     @Autowired
-    MBTUserRentDao userRentDao;
+    RentMapper userRentDao;
 
     @Autowired
-    MBTDstPlayerDao dstPlayerDao;
+    PlayerMapper dstPlayerDao;
 
     ExecutorService executor = new ThreadPoolExecutor(5, 5, 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(1), Executors.defaultThreadFactory(), new ThreadPoolExecutor.CallerRunsPolicy());
 
@@ -48,30 +48,30 @@ public class PlayerDetectService {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start("定时检测局内玩家人数");
 
-        MBTUserRentEntityExample example = new MBTUserRentEntityExample();
-        Criteria criteria = example.createCriteria();
-        criteria.andEndTimeGreaterThan(new Date());
-        criteria.andSaleEqualTo(true);
-        criteria.andGameCodeEqualTo("dst");
-        List<MBTUserRentEntity> mbtUserRentEntities = userRentDao.selectByExample(example);
+        List<RentDO> mbtUserRentEntities = userRentDao.selectList(new LambdaQueryWrapperX<RentDO>().gt(RentDO::getEndTime, LocalDateTime.now()).eq(RentDO::getSale, true).eq(RentDO::getGameCode, "dst"));
+
         DstClient client = DstClient.getInstance();
         CountDownLatch countDownLatch = new CountDownLatch(mbtUserRentEntities.size());
-        for (MBTUserRentEntity mbtUserRentEntity : mbtUserRentEntities) {
+        for (RentDO mbtUserRentEntity : mbtUserRentEntities) {
             executor.submit(() -> {
                 Long rentId = mbtUserRentEntity.getId();
                 Long userId = mbtUserRentEntity.getUserId();
                 Long instanceId = mbtUserRentEntity.getInstanceId();
                 String ip = mbtUserRentEntity.getInstanceIp();
-                MBTInstanceEntity instance = instanceDao.selectByPrimaryKey(instanceId);
+                InstanceDO instance = instanceDao.selectById(instanceId);
                 List<Player> onlinePlayers = client.getOnlinePlayers(instance);
                 int number = onlinePlayers.size();
                 try {
                     if (number == 0) {
                         // 判断前一次是不是玩家人数大于0，说明玩家在刚刚的时候全部退出游戏了.
-                        MBTDstPlayerEntityExample dstPlayerEntityExample = new MBTDstPlayerEntityExample();
-                        dstPlayerEntityExample.setOrderByClause("create_time desc");
-                        dstPlayerEntityExample.createCriteria().andRentIdEqualTo(rentId).andUserIdEqualTo(userId);
-                        MBTDstPlayerEntity mbtDstPlayerEntity = dstPlayerDao.selectOneByExample(dstPlayerEntityExample);
+                        // todo limit 1
+                        PlayerDO  mbtDstPlayerEntity =   dstPlayerDao.selectOne(new LambdaQueryWrapperX<PlayerDO>()
+                                .orderByDesc(PlayerDO::getCreateTime)
+                                .eq(PlayerDO::getRentId, rentId)
+                                .eq(PlayerDO::getUserId, userId)
+                                .last("limit 1")
+                        );
+
                         if (mbtDstPlayerEntity.getNumber() != null && mbtDstPlayerEntity.getNumber() > 0) {
                             // 说明刚刚玩家全部退出
                             String fileName = "";
@@ -91,12 +91,12 @@ public class PlayerDetectService {
                 } catch (Exception exception) {
                     log.error(exception.getMessage());
                 } finally {
-                    MBTDstPlayerEntity record = new MBTDstPlayerEntity();
+                    PlayerDO record = new PlayerDO();
                     record.setUserId(userId);
                     record.setRentId(rentId);
                     record.setInstanceIp(ip);
                     record.setNumber(number);
-                    dstPlayerDao.insertSelective(record);
+                    dstPlayerDao.insert(record);
                     countDownLatch.countDown();
                 }
             });

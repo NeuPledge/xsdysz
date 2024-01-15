@@ -1,7 +1,5 @@
 package cn.iocoder.yudao.module.game.common.params.manage;
 
-import cn.iocoder.yudao.module.game.util.PageUtils;
-import com.github.pagehelper.Page;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -71,8 +69,8 @@ public class FilterListRequest {
     /**
      * 在此直接执行分页, 如果sortby为传值，则不排序.
      */
-    public Page startPage() {
-        return PageUtils.startPage(pageNum, pageSize, orderBy);
-    }
+//    public Page startPage() {
+//        return PageUtils.startPage(pageNum, pageSize, orderBy);
+//    }
 }
 
