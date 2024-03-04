@@ -139,6 +139,7 @@ CREATE TABLE `game_snapshot`
 CREATE TABLE `game_rent`
 (
     `id`           bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `name`         varchar(100) NOT NULL COMMENT '房间名称/自定义租约名称',
     `user_id`      bigint(20) DEFAULT NULL COMMENT '登录账号',
     `sale`         tinyint(1) DEFAULT '0' COMMENT '是否已售, 0:未售, 1:已售',
     `package_id`   bigint(20) DEFAULT NULL COMMENT '套餐ID',
@@ -148,7 +149,7 @@ CREATE TABLE `game_rent`
     `end_time`     timestamp NULL DEFAULT NULL COMMENT '租约到期时间',
     `instance_id`  bigint(20) NOT NULL COMMENT '机器id',
     `instance_ip`  varchar(50)  NOT NULL COMMENT '机器ip',
-    `cluster_name` varchar(100) NOT NULL COMMENT '饥荒世界名称',
+    `cluster_name` varchar(100) NOT NULL COMMENT '(饥荒)世界名称',
     `notes`        text                                                         DEFAULT NULL COMMENT '备注',
     `auto_renewal` int(2) NOT NULL DEFAULT 0 COMMENT '是否开启自动续费',
     `create_time`  datetime     NOT NULL                                        DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

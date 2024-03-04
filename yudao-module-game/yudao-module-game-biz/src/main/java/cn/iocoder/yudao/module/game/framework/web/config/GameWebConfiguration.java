@@ -20,9 +20,5 @@ public class GameWebConfiguration {
     public GroupedOpenApi gameGroupedOpenApi() {
         return YudaoSwaggerAutoConfiguration.buildGroupedOpenApi("game");
     }
-    @Bean
-    public GroupedOpenApi consoleGroupedOpenApi() {
-        return YudaoSwaggerAutoConfiguration.buildGroupedOpenApi("console");
-    }
 
 }

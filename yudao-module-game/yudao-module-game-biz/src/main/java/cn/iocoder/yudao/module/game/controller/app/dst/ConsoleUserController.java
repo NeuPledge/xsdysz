@@ -1,4 +1,4 @@
-package cn.iocoder.yudao.module.game.controller.console.dst;
+package cn.iocoder.yudao.module.game.controller.app.dst;
 
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @Tag(name = "用户信息/租约/登录相关接口")
-@RequestMapping("/console/user")
+@RequestMapping("/user")
 public class ConsoleUserController {
 
 //    @Autowired

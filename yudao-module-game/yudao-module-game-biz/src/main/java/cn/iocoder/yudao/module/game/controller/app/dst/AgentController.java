@@ -1,4 +1,4 @@
-package cn.iocoder.yudao.module.game.controller.console.dst;
+package cn.iocoder.yudao.module.game.controller.app.dst;
 
 
 import cn.iocoder.yudao.module.game.common.ResultData;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @Tag(name = "Agent管理")
-@RequestMapping("/console/agent")
+@RequestMapping("/agent")
 public class AgentController {
 
 

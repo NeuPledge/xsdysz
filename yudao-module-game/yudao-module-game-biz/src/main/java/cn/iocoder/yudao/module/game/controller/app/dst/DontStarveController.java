@@ -1,4 +1,4 @@
-package cn.iocoder.yudao.module.game.controller.console.dst;
+package cn.iocoder.yudao.module.game.controller.app.dst;
 
 
 import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
@@ -41,7 +41,7 @@ import java.util.Objects;
 @Slf4j
 @RestController
 @Tag(name = "集群设置(房间设置)")
-@RequestMapping("/console/dst")
+@RequestMapping("/dst")
 public class DontStarveController {
 
     @Autowired
