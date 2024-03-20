@@ -19,6 +19,7 @@ import javax.validation.*;
 import javax.servlet.http.*;
 import java.util.*;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
@@ -153,7 +154,17 @@ public class EvaluateResultController {
     @Operation(summary = "按照模板导出测评结果")
     @OperateLog(type = EXPORT)
     public void analysisReport(@RequestParam Long collegeId, HttpServletResponse response) throws IOException {
-         evaluateResultService.analysisReport(collegeId, response);
+        List<Long> collegeIds = new ArrayList<>();
+        collegeIds.add(collegeId);
+        evaluateResultService.analysisReport(collegeIds, response);
+    }
+    @GetMapping("/analysis-report/all")
+    @Operation(summary = "按照模板导出测评结果(全校)")
+    @OperateLog(type = EXPORT)
+    public void analysisReportAll(HttpServletResponse response) throws IOException {
+        List<DicCollegeDO> dicCollegeList = dicCollegeService.getDicCollegeList();
+        List<Long> collegeIds = dicCollegeList.stream().map(e -> e.getId()).collect(Collectors.toList());
+        evaluateResultService.analysisReport(collegeIds, response);
     }
 
 }

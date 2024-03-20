@@ -277,19 +277,23 @@ public class EvaluateResultServiceImpl implements EvaluateResultService {
     }
 
     @Override
-    public void analysisReport(Long collegeId, HttpServletResponse response) throws IOException {
-
-        DicCollegeDO dicCollegeDO = dicCollegeMapper.selectById(collegeId);
+    public void analysisReport(List<Long> collegeIds, HttpServletResponse response) throws IOException {
+        String dataScope = "全校";
+        if (collegeIds.size() == 1) {
+            Long collegeId = collegeIds.get(0);
+            DicCollegeDO dicCollegeDO = dicCollegeMapper.selectById(collegeId);
+            dataScope = dicCollegeDO.getCollegeName();
+        }
         DictDataRespDTO dictData = dictDataApi.parseDictData("debrief_dict", "测评年度");
 
         AnalysisTemplate analysisTemplate = new AnalysisTemplate();
 
         analysisTemplate.setYear(dictData.getValue());
-        analysisTemplate.setCollegeName(dicCollegeDO.getCollegeName());
+        analysisTemplate.setCollegeName(dataScope);
         analysisTemplate.setDateymd(DateUtil.formatChineseDate(new Date(), false, false));
 
 
-        List<StypeCount> stypeCounts = dicCollegeMapper.stypeCount(collegeId);
+        List<StypeCount> stypeCounts = dicCollegeMapper.stypeCountAll(collegeIds);
         List<StypeCount> yanjiusheng = stypeCounts.stream().filter(e -> e.getStype().equals("yanjiusheng")).collect(Collectors.toList());
         if (CollectionUtils.isEmpty(yanjiusheng)) {
             analysisTemplate.setYanJiuShengPartyMemberCount(0);
@@ -306,14 +310,14 @@ public class EvaluateResultServiceImpl implements EvaluateResultService {
         }
         analysisTemplate.setCoverPartyMemberCount(analysisTemplate.getYanJiuShengPartyMemberCount() + analysisTemplate.getBenKePartyMemberCount());
 
-        Integer studentCount = dicCollegeMapper.studentCount(collegeId);
+        Integer studentCount = dicCollegeMapper.studentCountAll(collegeIds);
         analysisTemplate.setCoverStudentCount(studentCount);
 
-        Long partyMemberCount = partyMemberMapper.selectCount(new LambdaQueryWrapperX<PartyMemberDO>().eq(PartyMemberDO::getCollegeId, collegeId));
+        Long partyMemberCount = partyMemberMapper.selectCount(new LambdaQueryWrapperX<PartyMemberDO>().in(PartyMemberDO::getCollegeId, collegeIds));
         analysisTemplate.setAllPartyMemberCount(partyMemberCount.intValue());
 
 
-        List<CtypeResult> c1Type = evaluateResultMapper.c1Result(collegeId, "c1_type");
+        List<CtypeResult> c1Type = evaluateResultMapper.c1Result(collegeIds, "c1_type");
         Map<String, CtypeResult> c1Map = c1Type.stream().collect(Collectors.toMap(e -> e.getCtype() + "_" + e.getStype(), e -> e));
         CtypeResult defaultV = new CtypeResult();
         defaultV.setNum(0);
@@ -365,7 +369,7 @@ public class EvaluateResultServiceImpl implements EvaluateResultService {
         analysisTemplate.setC1_7_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC1_7_5() / analysisTemplate.getCoverPartyMemberCount())));
 
 
-        List<CtypeResult> c12Type = evaluateResultMapper.c1Result(collegeId, "c12_type");
+        List<CtypeResult> c12Type = evaluateResultMapper.c1Result(collegeIds, "c12_type");
         Map<String, CtypeResult> c12Map = c12Type.stream().collect(Collectors.toMap(e -> e.getCtype() + "_" + e.getStype(), e -> e));
         analysisTemplate.setC12_1_1(c12Map.getOrDefault("c12_100_benke", defaultV).getNum());
         analysisTemplate.setC12_2_1(c12Map.getOrDefault("c12_90_benke", defaultV).getNum());
@@ -412,33 +416,33 @@ public class EvaluateResultServiceImpl implements EvaluateResultService {
         analysisTemplate.setC12_6_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC12_6_5() / analysisTemplate.getCoverPartyMemberCount())));
         analysisTemplate.setC12_7_6(analysisTemplate.getCoverPartyMemberCount() == 0 ? 0 : Double.parseDouble(decimalFormat.format(1.0 * analysisTemplate.getC12_7_5() / analysisTemplate.getCoverPartyMemberCount())));
 
-        List<CtypeResult> c3Type = evaluateResultMapper.c1Result(collegeId, "c3_type");
+        List<CtypeResult> c3Type = evaluateResultMapper.c1Result(collegeIds, "c3_type");
         Map<String, CtypeResult> c3Map = c3Type.stream().collect(Collectors.toMap(e -> e.getCtype() + "_" + e.getStype(), e -> e));
         analysisTemplate.setC3_1_1(c3Map.getOrDefault("c3_less_10_benke", defaultV).getNum());
         analysisTemplate.setC3_2_1(c3Map.getOrDefault("c3_10_benke", defaultV).getNum());
         analysisTemplate.setC3_3_1(c3Map.getOrDefault("c3_20_benke", defaultV).getNum());
         analysisTemplate.setC3_4_1(c3Map.getOrDefault("c3_30_benke", defaultV).getNum());
         analysisTemplate.setC3_5_1(c3Map.getOrDefault("c3_40_benke", defaultV).getNum());
-        analysisTemplate.setC3_6_1(c3Map.getOrDefault("c3_less_50_benke", defaultV).getNum());
+        analysisTemplate.setC3_6_1(c3Map.getOrDefault("c3_more_50_benke", defaultV).getNum());
         analysisTemplate.setC3_1_2(c3Map.getOrDefault("c3_less_10_benke", defaultV).getRate());
         analysisTemplate.setC3_2_2(c3Map.getOrDefault("c3_10_benke", defaultV).getRate());
         analysisTemplate.setC3_3_2(c3Map.getOrDefault("c3_20_benke", defaultV).getRate());
         analysisTemplate.setC3_4_2(c3Map.getOrDefault("c3_30_benke", defaultV).getRate());
         analysisTemplate.setC3_5_2(c3Map.getOrDefault("c3_40_benke", defaultV).getRate());
-        analysisTemplate.setC3_6_2(c3Map.getOrDefault("c3_less_50_benke", defaultV).getRate());
+        analysisTemplate.setC3_6_2(c3Map.getOrDefault("c3_more_50_benke", defaultV).getRate());
 
         analysisTemplate.setC3_1_3(c3Map.getOrDefault("c3_less_10_yanjiusheng", defaultV).getNum());
         analysisTemplate.setC3_2_3(c3Map.getOrDefault("c3_10_yanjiusheng", defaultV).getNum());
         analysisTemplate.setC3_3_3(c3Map.getOrDefault("c3_20_yanjiusheng", defaultV).getNum());
         analysisTemplate.setC3_4_3(c3Map.getOrDefault("c3_30_yanjiusheng", defaultV).getNum());
         analysisTemplate.setC3_5_3(c3Map.getOrDefault("c3_40_yanjiusheng", defaultV).getNum());
-        analysisTemplate.setC3_6_3(c3Map.getOrDefault("c3_less_50_yanjiusheng", defaultV).getNum());
+        analysisTemplate.setC3_6_3(c3Map.getOrDefault("c3_more_50_yanjiusheng", defaultV).getNum());
         analysisTemplate.setC3_1_4(c3Map.getOrDefault("c3_less_10_yanjiusheng", defaultV).getRate());
         analysisTemplate.setC3_2_4(c3Map.getOrDefault("c3_10_yanjiusheng", defaultV).getRate());
         analysisTemplate.setC3_3_4(c3Map.getOrDefault("c3_20_yanjiusheng", defaultV).getRate());
         analysisTemplate.setC3_4_4(c3Map.getOrDefault("c3_30_yanjiusheng", defaultV).getRate());
         analysisTemplate.setC3_5_4(c3Map.getOrDefault("c3_40_yanjiusheng", defaultV).getRate());
-        analysisTemplate.setC3_6_4(c3Map.getOrDefault("c3_less_50_yanjiusheng", defaultV).getRate());
+        analysisTemplate.setC3_6_4(c3Map.getOrDefault("c3_more_50_yanjiusheng", defaultV).getRate());
 
         analysisTemplate.setC3_1_5(analysisTemplate.getC3_1_3() + analysisTemplate.getC3_1_1());
         analysisTemplate.setC3_2_5(analysisTemplate.getC3_2_3() + analysisTemplate.getC3_2_1());
@@ -461,7 +465,7 @@ public class EvaluateResultServiceImpl implements EvaluateResultService {
                 .withTemplate(inputStream)
                 .sheet()
                 .doFill(analysisTemplate);
-        response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(dicCollegeDO.getCollegeName() + "学生党员述责测评结果统计表.xls", "UTF-8"));
+        response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(dataScope + "学生党员述责测评结果统计表.xls", "UTF-8"));
         response.setContentType("application/vnd.ms-excel;charset=UTF-8");
 
     }

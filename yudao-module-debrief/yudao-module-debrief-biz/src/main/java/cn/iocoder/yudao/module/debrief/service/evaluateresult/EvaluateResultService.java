@@ -74,6 +74,6 @@ public interface EvaluateResultService {
 
     List<UnCommentStudent> uncommentStudent(Long collegeId);
 
-    void analysisReport(Long collegeId, HttpServletResponse response) throws IOException;
+    void analysisReport(List<Long> collegeIds, HttpServletResponse response) throws IOException;
 
 }

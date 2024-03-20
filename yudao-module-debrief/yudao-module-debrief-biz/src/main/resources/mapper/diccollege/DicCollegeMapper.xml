@@ -20,8 +20,34 @@
             ) subq
         group by stype
     </select>
+    <select id="stypeCountAll" resultType="cn.iocoder.yudao.module.debrief.controller.admin.diccollege.vo.StypeCount">
+        select stype,count(1) num from
+            (
+                select
+                    case length(student_number) when 8 then 'benke' else 'yanjiusheng' end as stype
+                from (select distinct party_member_id,dpm.student_number  from debrief_evaluate_result der left join  debrief_party_member dpm on dpm.id = der.party_member_id
+                        <where>
+                            der.`college_id` in
+                            <foreach collection="collegeIds" item="collegeId" separator="," open="(" close=")">
+                                #{collegeId}
+                            </foreach>
+                        </where>
+                      ) subq
+            ) subq
+        group by stype
+    </select>
     <select id="studentCount" resultType="java.lang.Integer">
         select count(1) from (select distinct commenter_id from debrief_evaluate_result where `college_id` = #{collegeId}) subq
+    </select>
+    <select id="studentCountAll" resultType="java.lang.Integer">
+        select count(1) from (select distinct commenter_id from debrief_evaluate_result
+                                                           <where>
+                                                               `college_id` in
+                                                               <foreach collection="collegeIds" item="collegeId" separator="," open="(" close=")">
+                                                                   #{collegeId}
+                                                               </foreach>
+                                                           </where>
+                                                           ) subq
     </select>
 
 </mapper>

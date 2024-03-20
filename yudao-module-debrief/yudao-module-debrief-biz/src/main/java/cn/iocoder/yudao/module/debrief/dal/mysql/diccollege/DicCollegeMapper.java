@@ -29,7 +29,13 @@ public interface DicCollegeMapper extends BaseMapperX<DicCollegeDO> {
     // 计算某个学院 本科生和研究生党员的总人数
     List<StypeCount> stypeCount(@Param("collegeId") Long collegeId);
 
+    // 计算某个学院 本科生和研究生党员的总人数
+    List<StypeCount> stypeCountAll(@Param("collegeIds") List<Long> collegeIds);
+
     // 参加测评学生人数
     Integer studentCount(@Param("collegeId") Long collegeId);
+
+    // 多个学院参加测评学生人数
+    Integer studentCountAll(@Param("collegeIds") List<Long> collegeIds);
 
 }

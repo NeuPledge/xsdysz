@@ -52,4 +52,6 @@ public interface DicCollegeService {
      */
     PageResult<DicCollegeDO> getDicCollegePage(DicCollegePageReqVO pageReqVO);
 
+    List<DicCollegeDO> getDicCollegeList();
+
 }

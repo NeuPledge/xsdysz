@@ -54,5 +54,5 @@ public interface EvaluateResultMapper extends BaseMapperX<EvaluateResultDO> {
     List<GradeProgressDto> gradeProgress();
 
 
-    List<CtypeResult> c1Result(@Param("collegeId") Long collegeId, @Param("ctype") String ctype);
+    List<CtypeResult> c1Result(@Param("collegeIds") List<Long> collegeIds, @Param("ctype") String ctype);
 }

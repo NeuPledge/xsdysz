@@ -71,4 +71,8 @@ public class DicCollegeServiceImpl implements DicCollegeService {
         return dicCollegeMapper.selectPage(pageReqVO);
     }
 
+    @Override
+    public List<DicCollegeDO> getDicCollegeList() {
+        return dicCollegeMapper.selectList();
+    }
 }
