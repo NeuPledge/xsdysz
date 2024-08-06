@@ -8,6 +8,9 @@ import cn.iocoder.yudao.module.crm.dal.dataobject.product.CrmProductDO;
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+
+import static cn.iocoder.yudao.framework.common.util.collection.CollectionUtils.convertMap;
 
 /**
  * CRM 产品 Service 接口
@@ -55,6 +58,16 @@ public interface CrmProductService {
     List<CrmProductDO> getProductList(Collection<Long> ids);
 
     /**
+     * 获得产品 Map
+     *
+     * @param ids 编号
+     * @return 产品 Map
+     */
+    default Map<Long, CrmProductDO> getProductMap(Collection<Long> ids) {
+        return convertMap(getProductList(ids), CrmProductDO::getId);
+    }
+
+    /**
      * 获得产品分页
      *
      * @param pageReqVO 分页查询
@@ -63,10 +76,27 @@ public interface CrmProductService {
     PageResult<CrmProductDO> getProductPage(CrmProductPageReqVO pageReqVO);
 
     /**
-     * 获得产品
+     * 获得产品数量
      *
      * @param categoryId 分类编号
      * @return 产品
      */
-    CrmProductDO getProductByCategoryId(Long categoryId);
+    Long getProductByCategoryId(Long categoryId);
+
+    /**
+     * 获得指定状态的产品列表
+     *
+     * @param status 状态
+     * @return 产品列表
+     */
+    List<CrmProductDO> getProductListByStatus(Integer status);
+
+    /**
+     * 校验产品们的有效性
+     *
+     * @param ids 编号数组
+     * @return 产品列表
+     */
+    List<CrmProductDO> validProductList(Collection<Long> ids);
+
 }

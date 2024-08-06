@@ -1,11 +1,14 @@
 package cn.iocoder.yudao.module.crm.dal.dataobject.product;
 
 import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
+import cn.iocoder.yudao.module.crm.enums.DictTypeConstants;
 import cn.iocoder.yudao.module.crm.enums.product.CrmProductStatusEnum;
 import com.baomidou.mybatisplus.annotation.KeySequence;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
+
+import java.math.BigDecimal;
 
 /**
  * CRM 产品 DO
@@ -38,13 +41,13 @@ public class CrmProductDO extends BaseDO {
     /**
      * 单位
      *
-     * 字典 {@link cn.iocoder.yudao.module.crm.enums.DictTypeConstants#CRM_PRODUCT_UNIT}
+     * 字典 {@link DictTypeConstants#CRM_PRODUCT_UNIT}
      */
     private Integer unit;
     /**
-     * 价格，单位：分
+     * 价格，单位：元
      */
-    private Long price;
+    private BigDecimal price;
     /**
      * 状态
      *
