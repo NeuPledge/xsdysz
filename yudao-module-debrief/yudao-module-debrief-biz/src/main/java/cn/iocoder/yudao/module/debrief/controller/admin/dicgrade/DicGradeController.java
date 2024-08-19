@@ -25,8 +25,8 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
 import cn.iocoder.yudao.framework.excel.core.util.ExcelUtils;
 
-import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
-import static cn.iocoder.yudao.framework.operatelog.core.enums.OperateTypeEnum.*;
+
+
 
 import cn.iocoder.yudao.module.debrief.controller.admin.dicgrade.vo.*;
 import cn.iocoder.yudao.module.debrief.dal.dataobject.dicgrade.DicGradeDO;
@@ -97,7 +97,7 @@ public class DicGradeController {
     @GetMapping("/export-excel")
     @Operation(summary = "导出班级字典列 Excel")
     @PreAuthorize("@ss.hasPermission('debrief:dic-grade:export')")
-    @OperateLog(type = EXPORT)
+    
     public void exportDicGradeExcel(@Valid DicGradePageReqVO pageReqVO,
               HttpServletResponse response) throws IOException {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);

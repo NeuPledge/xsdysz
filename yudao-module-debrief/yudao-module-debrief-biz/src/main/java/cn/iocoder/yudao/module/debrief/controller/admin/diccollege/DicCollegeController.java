@@ -22,8 +22,8 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
 import cn.iocoder.yudao.framework.excel.core.util.ExcelUtils;
 
-import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
-import static cn.iocoder.yudao.framework.operatelog.core.enums.OperateTypeEnum.*;
+
+
 
 import cn.iocoder.yudao.module.debrief.controller.admin.diccollege.vo.*;
 import cn.iocoder.yudao.module.debrief.dal.dataobject.diccollege.DicCollegeDO;
@@ -82,7 +82,7 @@ public class DicCollegeController {
     @GetMapping("/export-excel")
     @Operation(summary = "导出学院字典列 Excel")
     @PreAuthorize("@ss.hasPermission('debrief:dic-college:export')")
-    @OperateLog(type = EXPORT)
+    
     public void exportDicCollegeExcel(@Valid DicCollegePageReqVO pageReqVO,
               HttpServletResponse response) throws IOException {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);

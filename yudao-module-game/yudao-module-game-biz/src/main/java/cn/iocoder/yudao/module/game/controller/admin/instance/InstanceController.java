@@ -1,7 +1,9 @@
 package cn.iocoder.yudao.module.game.controller.admin.instance;
 
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.security.access.prepost.PreAuthorize;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,12 +20,11 @@ import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
+
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
 import cn.iocoder.yudao.framework.excel.core.util.ExcelUtils;
 
-import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
-import static cn.iocoder.yudao.framework.operatelog.core.enums.OperateTypeEnum.*;
 
 import cn.iocoder.yudao.module.game.controller.admin.instance.vo.*;
 import cn.iocoder.yudao.module.game.dal.dataobject.instance.InstanceDO;
@@ -82,14 +83,13 @@ public class InstanceController {
     @GetMapping("/export-excel")
     @Operation(summary = "导出机器信息 Excel")
     @PreAuthorize("@ss.hasPermission('game:instance:export')")
-    @OperateLog(type = EXPORT)
     public void exportInstanceExcel(@Valid InstancePageReqVO pageReqVO,
-              HttpServletResponse response) throws IOException {
+                                    HttpServletResponse response) throws IOException {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
         List<InstanceDO> list = instanceService.getInstancePage(pageReqVO).getList();
         // 导出 Excel
         ExcelUtils.write(response, "机器信息.xls", "数据", InstanceRespVO.class,
-                        BeanUtils.toBean(list, InstanceRespVO.class));
+                BeanUtils.toBean(list, InstanceRespVO.class));
     }
 
 }

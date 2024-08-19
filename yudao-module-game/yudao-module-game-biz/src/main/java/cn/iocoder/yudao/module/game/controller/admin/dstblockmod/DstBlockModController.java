@@ -22,9 +22,6 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
 import cn.iocoder.yudao.framework.excel.core.util.ExcelUtils;
 
-import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
-
-import static cn.iocoder.yudao.framework.operatelog.core.enums.OperateTypeEnum.*;
 
 import cn.iocoder.yudao.module.game.controller.admin.dstblockmod.vo.*;
 import cn.iocoder.yudao.module.game.dal.dataobject.dstblockmod.DstBlockModDO;
@@ -85,7 +82,6 @@ public class DstBlockModController {
     @GetMapping("/export-excel")
     @Operation(summary = "导出模组黑名单,此名单上的模组,将会警告提示/禁止添加 Excel")
     @PreAuthorize("@ss.hasPermission('game:dst-block-mod:export')")
-    @OperateLog(type = EXPORT)
     public void exportDstBlockModExcel(@Valid DstBlockModPageReqVO pageReqVO,
                                        HttpServletResponse response) throws IOException {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);

@@ -29,9 +29,9 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
 import cn.iocoder.yudao.framework.excel.core.util.ExcelUtils;
 
-import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
 
-import static cn.iocoder.yudao.framework.operatelog.core.enums.OperateTypeEnum.*;
+
+
 
 import cn.iocoder.yudao.module.debrief.controller.admin.evaluateresult.vo.*;
 import cn.iocoder.yudao.module.debrief.dal.dataobject.evaluateresult.EvaluateResultDO;
@@ -128,7 +128,7 @@ public class EvaluateResultController {
     @GetMapping("/export-excel")
     @Operation(summary = "导出评价结果 Excel")
     @PreAuthorize("@ss.hasPermission('debrief:evaluate-result:export')")
-    @OperateLog(type = EXPORT)
+    
     public void exportEvaluateResultExcel(@Valid EvaluateResultPageReqVO pageReqVO,
                                           HttpServletResponse response) throws IOException {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
@@ -140,7 +140,7 @@ public class EvaluateResultController {
 
     @GetMapping("/uncomment-student-excel")
     @Operation(summary = "导出某个学院未参与的学生")
-    @OperateLog(type = EXPORT)
+    
     public void uncommentStudent(@RequestParam Long collegeId, HttpServletResponse response) throws IOException {
         DicCollegeDO dicCollege = dicCollegeService.getDicCollege(collegeId);
         List<UnCommentStudent> unCommentStudents = evaluateResultService.uncommentStudent(collegeId);
@@ -151,7 +151,7 @@ public class EvaluateResultController {
 
     @GetMapping("/analysis-report")
     @Operation(summary = "按照模板导出测评结果")
-    @OperateLog(type = EXPORT)
+    
     public void analysisReport(@RequestParam Long collegeId, HttpServletResponse response) throws IOException {
          evaluateResultService.analysisReport(collegeId, response);
     }

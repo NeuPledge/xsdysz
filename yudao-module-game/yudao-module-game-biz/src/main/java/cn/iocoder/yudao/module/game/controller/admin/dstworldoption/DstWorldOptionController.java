@@ -22,8 +22,8 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
 import cn.iocoder.yudao.framework.excel.core.util.ExcelUtils;
 
-import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
-import static cn.iocoder.yudao.framework.operatelog.core.enums.OperateTypeEnum.*;
+
+
 
 import cn.iocoder.yudao.module.game.controller.admin.dstworldoption.vo.*;
 import cn.iocoder.yudao.module.game.dal.dataobject.dstworldoption.DstWorldOptionDO;
@@ -82,7 +82,7 @@ public class DstWorldOptionController {
     @GetMapping("/export-excel")
     @Operation(summary = "导出饥荒世界配置初始化数据 Excel")
     @PreAuthorize("@ss.hasPermission('game:dst-world-option:export')")
-    @OperateLog(type = EXPORT)
+    
     public void exportDstWorldOptionExcel(@Valid DstWorldOptionPageReqVO pageReqVO,
               HttpServletResponse response) throws IOException {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);

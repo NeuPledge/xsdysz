@@ -21,8 +21,8 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
 import cn.iocoder.yudao.framework.excel.core.util.ExcelUtils;
 
-import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
-import static cn.iocoder.yudao.framework.operatelog.core.enums.OperateTypeEnum.*;
+
+
 
 import cn.iocoder.yudao.module.game.controller.admin.operatelog.vo.*;
 import cn.iocoder.yudao.module.game.dal.dataobject.operatelog.GameOperateLogDO;
@@ -81,7 +81,7 @@ public class GameOperateLogController {
     @GetMapping("/export-excel")
     @Operation(summary = "导出操作日志 Excel")
     @PreAuthorize("@ss.hasPermission('game:operate-log:export')")
-    @OperateLog(type = EXPORT)
+    
     public void exportOperateLogExcel(@Valid OperateLogPageReqVO pageReqVO,
               HttpServletResponse response) throws IOException {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);

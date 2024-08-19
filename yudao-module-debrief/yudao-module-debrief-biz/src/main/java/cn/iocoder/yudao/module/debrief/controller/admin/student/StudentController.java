@@ -22,8 +22,8 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
 import cn.iocoder.yudao.framework.excel.core.util.ExcelUtils;
 
-import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
-import static cn.iocoder.yudao.framework.operatelog.core.enums.OperateTypeEnum.*;
+
+
 
 import cn.iocoder.yudao.module.debrief.controller.admin.student.vo.*;
 import cn.iocoder.yudao.module.debrief.dal.dataobject.student.StudentDO;
@@ -100,7 +100,7 @@ public class StudentController {
     @GetMapping("/export-excel")
     @Operation(summary = "导出学生信息 Excel")
     @PreAuthorize("@ss.hasPermission('debrief:student:export')")
-    @OperateLog(type = EXPORT)
+    
     public void exportStudentExcel(@Valid StudentPageReqVO pageReqVO,
               HttpServletResponse response) throws IOException {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);

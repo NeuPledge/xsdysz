@@ -22,8 +22,8 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
 import cn.iocoder.yudao.framework.excel.core.util.ExcelUtils;
 
-import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
-import static cn.iocoder.yudao.framework.operatelog.core.enums.OperateTypeEnum.*;
+
+
 
 import cn.iocoder.yudao.module.game.controller.admin.rent.vo.*;
 import cn.iocoder.yudao.module.game.dal.dataobject.rent.RentDO;
@@ -82,7 +82,7 @@ public class RentController {
     @GetMapping("/export-excel")
     @Operation(summary = "导出租约 Excel")
     @PreAuthorize("@ss.hasPermission('game:rent:export')")
-    @OperateLog(type = EXPORT)
+    
     public void exportRentExcel(@Valid RentPageReqVO pageReqVO,
               HttpServletResponse response) throws IOException {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);

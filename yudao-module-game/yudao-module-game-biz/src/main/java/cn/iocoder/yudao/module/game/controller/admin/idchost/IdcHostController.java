@@ -1,7 +1,9 @@
 package cn.iocoder.yudao.module.game.controller.admin.idchost;
 
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.security.access.prepost.PreAuthorize;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,12 +20,11 @@ import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
+
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
 import cn.iocoder.yudao.framework.excel.core.util.ExcelUtils;
 
-import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
-import static cn.iocoder.yudao.framework.operatelog.core.enums.OperateTypeEnum.*;
 
 import cn.iocoder.yudao.module.game.controller.admin.idchost.vo.*;
 import cn.iocoder.yudao.module.game.dal.dataobject.idchost.IdcHostDO;
@@ -82,14 +83,13 @@ public class IdcHostController {
     @GetMapping("/export-excel")
     @Operation(summary = "导出机房主机 Excel")
     @PreAuthorize("@ss.hasPermission('game:idc-host:export')")
-    @OperateLog(type = EXPORT)
     public void exportIdcHostExcel(@Valid IdcHostPageReqVO pageReqVO,
-              HttpServletResponse response) throws IOException {
+                                   HttpServletResponse response) throws IOException {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
         List<IdcHostDO> list = idcHostService.getIdcHostPage(pageReqVO).getList();
         // 导出 Excel
         ExcelUtils.write(response, "机房主机.xls", "数据", IdcHostRespVO.class,
-                        BeanUtils.toBean(list, IdcHostRespVO.class));
+                BeanUtils.toBean(list, IdcHostRespVO.class));
     }
 
 }

@@ -22,8 +22,8 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
 import cn.iocoder.yudao.framework.excel.core.util.ExcelUtils;
 
-import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
-import static cn.iocoder.yudao.framework.operatelog.core.enums.OperateTypeEnum.*;
+
+
 
 import cn.iocoder.yudao.module.debrief.controller.admin.partymember.vo.*;
 import cn.iocoder.yudao.module.debrief.dal.dataobject.partymember.PartyMemberDO;
@@ -82,7 +82,7 @@ public class PartyMemberController {
     @GetMapping("/export-excel")
     @Operation(summary = "导出党员信息 Excel")
     @PreAuthorize("@ss.hasPermission('debrief:party-member:export')")
-    @OperateLog(type = EXPORT)
+    
     public void exportPartyMemberExcel(@Valid PartyMemberPageReqVO pageReqVO,
               HttpServletResponse response) throws IOException {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);

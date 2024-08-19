@@ -22,8 +22,8 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
 import cn.iocoder.yudao.framework.excel.core.util.ExcelUtils;
 
-import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
-import static cn.iocoder.yudao.framework.operatelog.core.enums.OperateTypeEnum.*;
+
+
 
 import cn.iocoder.yudao.module.game.controller.admin.snapshot.vo.*;
 import cn.iocoder.yudao.module.game.dal.dataobject.snapshot.SnapshotDO;
@@ -82,7 +82,7 @@ public class SnapshotController {
     @GetMapping("/export-excel")
     @Operation(summary = "导出快照, 便于误操作恢复数据 Excel")
     @PreAuthorize("@ss.hasPermission('game:snapshot:export')")
-    @OperateLog(type = EXPORT)
+    
     public void exportSnapshotExcel(@Valid SnapshotPageReqVO pageReqVO,
               HttpServletResponse response) throws IOException {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
